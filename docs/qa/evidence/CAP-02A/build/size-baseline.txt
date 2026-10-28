@@ -1,0 +1,8 @@
+﻿# CAP-02A binary-size baseline (2026-10-28)
+Method: git archive of commit f42b230 (BOOT-02) extracted to the session scratchpad; node_modules linked (junction) from the
+repository, nothing installed; built with the same toolchain (rustc 1.99.1) via 'npm run build:app' into a separate CARGO_TARGET_DIR.
+BOOT-02 tp-desktop.exe (rebuilt here): 8,697,344 bytes, SHA-256 69AE26E2246C30301A31C7AD873F7C967D55C4A8C1C3CC1BD44EC63F4B7144A2
+CAP-02A tp-desktop.exe:                8,942,080 bytes, SHA-256 2A93F2F354AA64C02B92A35B1A37C3D6E2FE36E90D7D6D88A179E738F93A0742
+Delta: +244,736 bytes (+2.8 %): WGC provider, preview host, IPC commands, preview UI assets.
+Note: the rebuilt BOOT-02 hash differs from the hash recorded in BOOT-02 (4DE228A9...3F76); byte-for-byte reproducibility
+was never established (README), so only sizes are compared.

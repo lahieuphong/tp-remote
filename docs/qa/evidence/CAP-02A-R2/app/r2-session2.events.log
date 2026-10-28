@@ -1,0 +1,6 @@
+﻿20:47:18.953 t=0s tp-remote level=info event=app.start version=0.1.0 profile=release pid=52748
+20:47:18.953 t=0s tp-remote level=info event=app.ready
+20:47:18.953 t=0s tp-remote level=info event=ipc.preview_status_polls count=1 state=ready
+20:47:18.953 t=0s tp-remote level=info event=ipc.get_app_info result=ok
+20:48:19.064 t=60s tp-remote level=info event=ipc.preview_status_polls count=60 state=ready
+20:49:19.180 t=120s tp-remote level=info event=ipc.preview_status_polls count=120 state=ready

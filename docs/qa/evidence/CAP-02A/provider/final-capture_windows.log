@@ -1,0 +1,43 @@
+﻿cargo :    Compiling tp-test-harness v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-test-harness)
+At line:1 char:466
++ ... al-$t.log"; cargo test -p tp-test-harness --test $t --offline -- --ig ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (   Compiling tp...p-test-harness):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.93s
+     Running tests\capture_windows.rs (target\debug\deps\capture_windows-19608ccb16c77fe2.exe)
+
+running 7 tests
+test a_target_that_is_already_gone_fails_cleanly ... start on a closed target: platformUnavailable: the capture target has no size (it may have been closed)
+ok
+test closing_the_target_ends_the_capture ... closed after 1 frames; stats=CaptureStats { frames_delivered: 1, frames_dropped: 0 }
+ok
+test dev_w1_has_three_1080p_monitors_with_negative_origins ... ok
+test each_monitor_delivers_frames_of_its_own_size ... monitor DISPLAY1 item_name="Display 2"
+monitor DISPLAY1 first_frame_ms=60 frames=1 kind=display
+monitor DISPLAY2 item_name="Display 1"
+monitor DISPLAY2 first_frame_ms=122 frames=1 kind=display
+monitor DISPLAY3 item_name="Display 3"
+monitor DISPLAY3 first_frame_ms=122 frames=1 kind=display
+ok
+test resizing_the_target_resizes_frames ... resized 626x473 -> 886x593
+ok
+test ten_start_stop_cycles_release_cleanly ... cycle 1: first_frame_ms=133 stop_ms=1 frames=5
+cycle 2: first_frame_ms=114 stop_ms=1 frames=5
+cycle 3: first_frame_ms=129 stop_ms=1 frames=5
+cycle 4: first_frame_ms=129 stop_ms=1 frames=5
+cycle 5: first_frame_ms=124 stop_ms=1 frames=5
+cycle 6: first_frame_ms=211 stop_ms=3 frames=5
+cycle 7: first_frame_ms=142 stop_ms=2 frames=5
+cycle 8: first_frame_ms=193 stop_ms=1 frames=5
+cycle 9: first_frame_ms=163 stop_ms=1 frames=5
+cycle 10: first_frame_ms=115 stop_ms=1 frames=5
+ok
+test window_capture_delivers_real_test_pattern_frames ... readback size=626x473 top=[255, 0, 255] bottom=[32, 32, 32]
+window first_frame_ms=143 frames=31 fps=52.9 max_interval_ms=33.3
+ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 6.38s
+
+EXIT=0

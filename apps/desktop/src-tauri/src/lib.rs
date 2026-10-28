@@ -13,9 +13,13 @@
 //! ACL, plus a label check in each command).
 #![forbid(unsafe_code)]
 
+use std::sync::atomic::{AtomicU64, Ordering};
+
 use tauri::ipc::Response;
 use tauri::{AppHandle, Manager, Runtime, State, WebviewWindow};
-use tp_contracts::ipc::{AppInfo, CaptureDisplays, IpcError, IpcErrorCode, LocalPreviewStatus};
+use tp_contracts::ipc::{
+    AppInfo, CaptureDisplays, IpcError, IpcErrorCode, LocalPreviewState, LocalPreviewStatus,
+};
 use tp_core::preview::{Reject, StartError};
 use tp_core::{NativePreview, ShellContext};
 use tp_diagnostics::{Level, Logger, emit};
@@ -108,13 +112,51 @@ fn get_capture_displays<R: Runtime>(
     })
 }
 
+/// Status requests served (diagnostics: proves which instance the UI is talking to).
+static STATUS_POLLS: AtomicU64 = AtomicU64::new(0);
+
+fn state_name(state: LocalPreviewState) -> &'static str {
+    match state {
+        LocalPreviewState::NotAvailable => "notAvailable",
+        LocalPreviewState::Ready => "ready",
+        LocalPreviewState::SelectingTarget => "selectingTarget",
+        LocalPreviewState::Initializing => "initializing",
+        LocalPreviewState::Capturing => "capturing",
+        LocalPreviewState::Stopping => "stopping",
+        LocalPreviewState::Stopped => "stopped",
+        LocalPreviewState::Failed => "failed",
+    }
+}
+
+fn code_name(code: IpcErrorCode) -> &'static str {
+    match code {
+        IpcErrorCode::Internal => "internal",
+        IpcErrorCode::InjectedFault => "injectedFault",
+        IpcErrorCode::InvalidState => "invalidState",
+        IpcErrorCode::Unavailable => "unavailable",
+        IpcErrorCode::Forbidden => "forbidden",
+    }
+}
+
 #[tauri::command]
 fn get_local_preview_status<R: Runtime>(
     window: WebviewWindow<R>,
     preview: State<'_, NativePreview>,
 ) -> Result<LocalPreviewStatus, IpcError> {
     require_main(&window, "get_local_preview_status")?;
-    Ok(preview.status())
+    let status = preview.status();
+    let polls = STATUS_POLLS.fetch_add(1, Ordering::Relaxed) + 1;
+    if polls == 1 || polls.is_multiple_of(60) {
+        emit(
+            Level::Info,
+            "ipc.preview_status_polls",
+            &[
+                ("count", &polls.to_string()),
+                ("state", state_name(status.state)),
+            ],
+        );
+    }
+    Ok(status)
 }
 
 /// Opens the Windows capture picker over the main window. Runs on the main thread (a
@@ -125,8 +167,35 @@ fn start_local_preview<R: Runtime>(
     window: WebviewWindow<R>,
     preview: State<'_, NativePreview>,
 ) -> Result<LocalPreviewStatus, IpcError> {
-    require_main(&window, "start_local_preview")?;
-    let owner = picker_owner(&window)?;
+    // Logged on entry and on every outcome, so a request that never arrives is
+    // distinguishable from one that is rejected (CAP-02A-R2).
+    emit(
+        Level::Info,
+        "ipc.start_local_preview",
+        &[("result", "received")],
+    );
+    let result = start_preview(&window, &preview);
+    match &result {
+        Ok(status) => emit(
+            Level::Info,
+            "ipc.start_local_preview",
+            &[("result", "ok"), ("state", state_name(status.state))],
+        ),
+        Err(e) => emit(
+            Level::Warn,
+            "ipc.start_local_preview",
+            &[("result", "err"), ("error_code", code_name(e.code))],
+        ),
+    }
+    result
+}
+
+fn start_preview<R: Runtime>(
+    window: &WebviewWindow<R>,
+    preview: &NativePreview,
+) -> Result<LocalPreviewStatus, IpcError> {
+    require_main(window, "start_local_preview")?;
+    let owner = picker_owner(window)?;
     preview.start(owner).map_err(|e| {
         let (code, text) = match e {
             StartError::Rejected(Reject::NotAvailable) => (
@@ -183,7 +252,13 @@ fn stop_local_preview<R: Runtime>(
     preview: State<'_, NativePreview>,
 ) -> Result<LocalPreviewStatus, IpcError> {
     require_main(&window, "stop_local_preview")?;
-    Ok(preview.stop())
+    let status = preview.stop();
+    emit(
+        Level::Info,
+        "ipc.stop_local_preview",
+        &[("result", "ok"), ("state", state_name(status.state))],
+    );
+    Ok(status)
 }
 
 /// The latest preview frame as raw bytes (`tp_contracts::ipc::preview_frame` layout).

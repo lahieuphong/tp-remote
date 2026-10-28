@@ -1,0 +1,32 @@
+﻿cargo :    Compiling tp-test-harness v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-test-harness)
+At line:1 char:466
++ ... al-$t.log"; cargo test -p tp-test-harness --test $t --offline -- --ig ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (   Compiling tp...p-test-harness):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.73s
+     Running tests\preview_windows.rs (target\debug\deps\preview_windows-5364a2ec9b070917.exe)
+
+running 4 tests
+test ten_host_cycles_start_and_stop_cleanly ... host cycle 1: generation=1 to_first_preview_ms=176 stop_ms=1
+host cycle 2: generation=2 to_first_preview_ms=46 stop_ms=1
+host cycle 3: generation=3 to_first_preview_ms=66 stop_ms=15
+host cycle 4: generation=4 to_first_preview_ms=137 stop_ms=1
+host cycle 5: generation=5 to_first_preview_ms=46 stop_ms=1
+host cycle 6: generation=6 to_first_preview_ms=51 stop_ms=1
+host cycle 7: generation=7 to_first_preview_ms=51 stop_ms=1
+host cycle 8: generation=8 to_first_preview_ms=61 stop_ms=16
+host cycle 9: generation=9 to_first_preview_ms=135 stop_ms=1
+host cycle 10: generation=10 to_first_preview_ms=50 stop_ms=1
+ok
+test the_host_ends_the_run_when_the_target_closes ... ok
+test the_host_follows_a_resized_target ... host resize 786x593 -> 986x693 (preview 786x593)
+ok
+test the_host_serves_real_pattern_frames_and_stop_revokes_them ... host frame 786x593 seq=1 top=[255, 0, 255]
+host stats: captured=11 previewed=2 capture_fps=43.3 first_frame_ms=Some(134)
+ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.43s
+
+EXIT=0

@@ -1,4 +1,4 @@
-﻿
+
 > tp-remote@0.1.0 check
 > node scripts/check.mjs
 
@@ -8,7 +8,7 @@
 === Rust check: cargo check --workspace --all-targets --locked
 node.exe :     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.25s
 At line:1 char:1
-+ & "C:\Program Files\nodejs/node.exe" "C:\Users\LA VIET PHONG\AppData\ ...
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\<user>\AppData\ ...
 + ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : NotSpecified: (    Finished `d...get(s) in 0.25s:String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError

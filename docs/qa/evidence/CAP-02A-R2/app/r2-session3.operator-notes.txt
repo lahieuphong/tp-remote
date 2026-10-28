@@ -1,0 +1,12 @@
+20:50:50.027 diagnostic click (QA lead, with operator permission): window=51975282 rect=-32000,-32000 point=-31788,-31501 windowUnderPoint=0 isTpRemote=False minimized=True -> NOT clicked (target not TP Remote)
+20:51:38 root-cause evidence (window-events.log, read-only WinEvent hook):
+  20:50:19.868 FOREGROUND TP Remote (PID 16388) at launch
+  20:50:46.944 MINIMIZE_START TP Remote QA window (no capture request ever received)
+  20:50:48.499 FOREGROUND test pattern -> 20:50:48.587 MINIMIZE_START test pattern (88 ms: mouse-down activates, mouse-up on the minimize button)
+  20:50:49.761 MINIMIZE_START test-pattern console window
+  20:50:49.778 FOREGROUND Chrome (another application's window, title redacted), then Search, then Chrome
+Interpretation: the QA windows were minimized one after another by input on the desktop; Start was never clicked.
+The diagnostic click at 20:50:50 was NOT sent because the target point was no longer over TP Remote.
+20:53:02.149 final-try diagnostic click: rect=20,20 point=232,519 underIsTpRemote=True appMinimized=False patternMinimized=False -> clicked
+20:53:43 pattern restored, minimized=False
+20:54:28 picker outcome: the picker ('Capture with TP Remote - QA r2-session3 - PID 16388') was open from 20:53:02.9 to about 20:53:42.6 and closed without a selection (TP Remote regained the foreground at 20:53:42.601; picker_cancelled generation=1 at 20:53:43.073). The QA lead's pattern restore at 20:53:42.918 came after the picker had closed. The operator then minimized the pattern (20:53:44.824) and TP Remote (20:53:45.988). The operator reported 'Selected the pattern'; not corroborated.

@@ -1,0 +1,2 @@
+﻿20:48:31.144 restored: app_min=False pattern_min=False
+20:50:07 facts: display layout now 1 monitor (\\.\DISPLAY1 0,0 1920x1080 primary); remote-access agents running: remoting_host (Chrome Remote Desktop, session 0), TeamViewer (session 2), UltraViewer_Desktop (session 2); SM_REMOTESESSION=0; window scrolled to bottom at 20:49 although no start request was ever received

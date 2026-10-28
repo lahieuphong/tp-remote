@@ -1,0 +1,67 @@
+{
+    "label":  "release-run1",
+    "started":  "2026-10-28T16:44:10",
+    "exe":  "E:\\Phong_Nho_IT\\tp-remote\\target\\release\\tp-desktop.exe",
+    "exeSha256":  "2A93F2F354AA64C02B92A35B1A37C3D6E2FE36E90D7D6D88A179E738F93A0742",
+    "injectFault":  false,
+    "pid":  37992,
+    "exitedDuringStartup":  false,
+    "ipcObserved":  true,
+    "secondsToIpc":  0.66,
+    "windowVisible":  true,
+    "windowTitle":  "TP Remote",
+    "token":  "elevated=False integrity=Medium (0x2000)",
+    "dpiAwareness":  "per-monitor (PerMonitorV2), window DPI 96",
+    "initialRect":  "402,120,1116,799",
+    "screenshotInitial":  "1116x799",
+    "processTree":  [
+                        "tp-desktop.exe#37992\u003c-50252",
+                        "msedgewebview2.exe#43964\u003c-37992",
+                        "msedgewebview2.exe#51860\u003c-43964",
+                        "msedgewebview2.exe#45352\u003c-43964",
+                        "msedgewebview2.exe#48760\u003c-43964",
+                        "msedgewebview2.exe#44476\u003c-43964",
+                        "msedgewebview2.exe#52852\u003c-43964"
+                    ],
+    "tcpListeners":  [
+
+                     ],
+    "tcpAll":  [
+
+               ],
+    "udpEndpoints":  [
+
+                     ],
+    "resize":  [
+                   "below-min-500x400: requested=100,100,500,400 actual=100,100,500,400 dpi=96 shot=500x400",
+                   "1024x700: requested=100,100,1024,700 actual=100,100,1024,700 dpi=96 shot=1024x700",
+                   "1600x1000: requested=100,40,1600,1000 actual=100,40,1600,1000 dpi=96 shot=1600x1000",
+                   "left-monitor-1100x760: requested=-1820,171,1100,760 actual=-1820,171,1100,760 dpi=96 shot=1100x760"
+               ],
+    "treePidsBeforeClose":  [
+                                37992,
+                                43964,
+                                51860,
+                                45352,
+                                48760,
+                                44476,
+                                52852
+                            ],
+    "closeMessageSent":  true,
+    "exitedAfterClose":  true,
+    "exitCode":  0,
+    "survivingPids":  [
+
+                      ],
+    "cleanExit":  true,
+    "stderrEvents":  [
+                         "tp-remote level=info event=app.start version=0.1.0 profile=release pid=37992",
+                         "tp-remote level=info event=app.ready",
+                         "tp-remote level=info event=ipc.get_app_info result=ok",
+                         "tp-remote level=info event=app.exit"
+                     ],
+    "stderrOther":  [
+
+                    ],
+    "finished":  "2026-10-28T16:44:16"
+}

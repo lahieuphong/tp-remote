@@ -35,3 +35,15 @@ The operator was asked four times to start a preview of the test pattern:
 - **Recorded:** T-CAP-RUN-01 (picker appears) and T-CAP-SEC-02 (cancel captures nothing) are corroborated by the app log for generation 1. The cancel led to state Ready, no capture thread was ever started, and no grant was minted.
 - **Not recorded as passed:** the reports of a live preview are not corroborated by the app, so T-CAP-RUN-02 … T-CAP-RUN-05 at app level are **NOT RUN**. The cause is unknown. The app log, the process threads and the unchanged screenshots all show that no start request reached this instance after the cancel.
 - **Clean exit:** the session ended with `WM_CLOSE`. The app exited, no process of its tree survived, and nothing was force-stopped (`session1-functional.summary.json`).
+
+## Addendum (CAP-02A-R2, 2026-10-28)
+
+R2 repeated the guided test with more instrumentation: IPC entry and result logs, a status-poll counter, a labelled window title, window-state sampling, and a read-only WinEvent hook. The same pattern appeared:
+- The QA window was covered by the operator's editor windows.
+- It was minimized repeatedly, by input on the desktop.
+- It was never the foreground window.
+- No Start request arrived, while the operator reported success.
+
+A diagnostic click proved that the button → IPC → picker path works in the real app. The picker was then closed without a selection.
+
+For this session the specific mechanism was not observed directly; R2's evidence makes "operator input did not reach TP Remote" the most likely explanation. Details: `docs/reports/CAP-02A-report.md` §21.2 and `docs/qa/evidence/CAP-02A-R2/`.

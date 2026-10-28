@@ -19,6 +19,7 @@ CAP-02A adds the first real operating-system capability: Windows.Graphics.Captur
   - App-level verification of the picker flow with a person is incomplete (§9, R-6).
   - A WebView compromise could open the picker repeatedly and read preview pixels while a preview runs (R-1, R-2).
   - About 3 process handles per capture run are not returned by WGC (R-5).
+  - The WebView2 runtime makes outbound HTTPS connections on its own (F-CAP-8, R-8). There is no listener.
 
 ## 2. Trust boundaries
 
@@ -135,7 +136,7 @@ Features used:
 | F-CAP-5 | Script in the main WebView can call `start_local_preview` repeatedly | Low | Accepted: a local user selection is still required; one in-flight request; picker is OS-drawn (R-1) |
 | F-CAP-6 | Preview pixels live in WebView memory while shown; window titles appear in the local UI | Low | Accepted for local preview; CSP blocks exfiltration by page script; never logged (R-2, R-3) |
 | F-CAP-7 | App-level picker flow with a person (select, live preview, border, stop, 10 cycles, 30 min) not verified: the operator's reports were not corroborated by the app | Medium (assurance gap) | **Open**: NOT RUN; host-level substitutes run on real frames (test results §4) |
-| F-CAP-8 | TCP connections were seen in the app's process tree (WebView2 processes) | — | Characterised in the test results (T-CAP-SEC-10) |
+| F-CAP-8 | The WebView2 runtime processes started by the app (`msedgewebview2.exe`) open **outbound** HTTPS connections, observed to 8.8.4.4:443, 40.99.33.130:443 and 150.171.28.11:443 (`app/idle-network-check.tcp.log`). No socket is in `Listen` state and no UDP endpoint exists. TP Remote's own code opens no socket; preview frames never use these connections (IPC only; CSP blocks page fetches). The connections are most likely WebView2/Edge services (for example SmartScreen, component updates, secure DNS); that attribution is UNVERIFIED | Medium (privacy expectation for a remote-desktop product) | **Open**: T-CAP-SEC-10 (no listener) PASSES; outbound traffic is recorded as R-8 |
 
 ## 10. Residual risks
 
@@ -148,3 +149,15 @@ Features used:
 | R-5 | WGC handle growth per run (F-CAP-4) | Re-measure on other drivers and builds (W2); report upstream if confirmed |
 | R-6 | App-level manual verification incomplete (F-CAP-7) | Reviewer / CAP-02A follow-up run |
 | R-7 | Future remote capture will need programmatic display targets after consent; not authorized by ADR-007 | NET-03 / VID-04 (new ADR) |
+| R-8 | WebView2 runtime makes outbound connections (F-CAP-8). Candidate mitigations: WebView2 browser arguments that disable SmartScreen, secure-DNS upgrade and update/telemetry features, set through the Tauri window config; must be evaluated and tested, not assumed | REL-09 (or earlier, by decision) |
+
+## 11. CAP-02A-R2 additions (2026-10-28)
+
+| Item | Result |
+|---|---|
+| Authorization model | Unchanged: default-deny, `LocalPreviewGrant`, capabilities, CSP; 11/11 negative controls caught on the final code |
+| New diagnostics | `ipc.start_local_preview` (`result=received/ok/err`, `state`, `error_code`), `ipc.stop_local_preview`, `ipc.preview_status_polls` (`count`, `state`). Allowlisted keys only; no labels, titles or pixels |
+| App-level picker boundary | The real WebView click opens the OS picker for the correct window (picker title names the QA window); a cancelled picker captured nothing (twice). A person's selection was not obtained |
+| **F-CAP-8 (WebView2 outbound)** | **Characterised:** all connections belong to WebView2 runtime processes; `8.8.4.4:443` is `dns.google` (secure DNS; this PC resolves via 8.8.8.8/8.8.4.4); two Microsoft-range endpoints (service UNVERIFIED); SmartScreen already disabled by Tauri/wry defaults. **No app-controlled path for pixels** (no networking crates, no socket APIs, no frontend network APIs, CSP `connect-src ipc: http://ipc.localhost`). Status: runtime-owned, documented; hardening review in REL-09 (secure-DNS and diagnostic-data policy), without disabling updates or certificate validation |
+| **F-CAP-9 (new): evidence privacy** | The pushed public commit `7e1a661` contains the Windows account name in tool paths, and a PowerShell provider dump (profile path, drive list, two LAN addresses) in `CAP-02A/app/session1-functional.summary.json`. Cause: the QA script serialized `Get-Content` objects instead of strings; **fixed**. Working tree **redacted** (`<user>`, `<lan-ip>`, other applications' window titles). No credentials, tokens, emails or captured pixels were found. Rewriting public history is the owner's decision (not done) |
+| QA tooling | R2 diagnostics only *observe*: a WinEvent hook and z-order queries. The single synthetic click (Start button only, never the picker) was made with the operator's permission and is labelled in the evidence |

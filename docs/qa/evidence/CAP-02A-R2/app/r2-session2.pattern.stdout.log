@@ -1,0 +1,2 @@
+tp-test-pattern pid=38860 hwnd=0xc18ee
+tp-test-pattern exit closed_by_user=true

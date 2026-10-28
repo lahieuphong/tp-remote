@@ -1,0 +1,15 @@
+20:48:16.549 watch started for 180 s
+20:48:31.155 MINIMIZE_END hwnd=70585454 class=Tauri Window title='TP Remote - QA r2-session2 - PID 52748' process=tp-desktop#52748
+20:48:31.163 MINIMIZE_END hwnd=792814 class=TpRemoteTestPattern title='TP Remote Test Pattern' process=tp-test-pattern#38860
+20:50:19.643 FOREGROUND hwnd=35919330 class=ConsoleWindowClass title='E:\Phong_Nho_IT\tp-remote\target\release\tp-test-pattern.exe' process=tp-test-pattern#48768
+20:50:19.869 FOREGROUND hwnd=51975282 class=Tauri Window title='TP Remote' process=tp-desktop#16388
+20:50:46.944 MINIMIZE_START hwnd=51975282 class=Tauri Window title='TP Remote - QA r2-session3 - PID 16388' process=tp-desktop#16388
+20:50:46.953 FOREGROUND hwnd=35919330 class=ConsoleWindowClass title='E:\Phong_Nho_IT\tp-remote\target\release\tp-test-pattern.exe' process=tp-test-pattern#48768
+20:50:48.498 FOREGROUND hwnd=53415188 class=TpRemoteTestPattern title='TP Remote Test Pattern' process=tp-test-pattern#48768
+20:50:48.587 MINIMIZE_START hwnd=53415188 class=TpRemoteTestPattern title='TP Remote Test Pattern' process=tp-test-pattern#48768
+20:50:48.594 FOREGROUND hwnd=35919330 class=ConsoleWindowClass title='E:\Phong_Nho_IT\tp-remote\target\release\tp-test-pattern.exe' process=tp-test-pattern#48768
+20:50:49.761 MINIMIZE_START hwnd=35919330 class=ConsoleWindowClass title='E:\Phong_Nho_IT\tp-remote\target\release\tp-test-pattern.exe' process=tp-test-pattern#48768
+20:50:49.769 FOREGROUND hwnd=395694 class=Chrome_WidgetWin_1 title='[redacted: not TP Remote]' process=chrome#25412
+20:50:53.585 FOREGROUND hwnd=132042 class=Windows.UI.Core.CoreWindow title='[redacted: not TP Remote]' process=SearchHost#21300
+20:50:54.544 FOREGROUND hwnd=395694 class=Chrome_WidgetWin_1 title='[redacted: not TP Remote]' process=chrome#25412
+20:51:16.597 watch ended

@@ -1,0 +1,1 @@
+﻿17:4x: TP Remote QA window (hwnd 1315760) set topmost by the QA lead so it is not hidden behind the operator's VS Code windows (z-order check before: 2 VS Code windows covered it fully).

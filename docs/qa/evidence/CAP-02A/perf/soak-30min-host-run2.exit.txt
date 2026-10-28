@@ -1,0 +1,1 @@
+﻿exit=0 cpuCount=16 args=--seconds 1800 --x 1100 --y 600 --width 800 --height 450

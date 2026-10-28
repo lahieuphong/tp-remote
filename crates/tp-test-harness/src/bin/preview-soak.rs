@@ -83,6 +83,7 @@ fn main() {
         let mut invalid = 0u64;
         let mut last_report = Instant::now();
         let mut drawn_at_report = 0u64;
+        let mut restores = 0u64;
         while started.elapsed() < Duration::from_secs(seconds) {
             let frame = preview.take_frame(generation, drawn as u32);
             match Header::decode(&frame) {
@@ -96,6 +97,12 @@ fn main() {
                 Some(_) => {}
                 None => invalid += 1,
             }
+            // Keep the synthetic source on screen: a minimized window delivers no frames
+            // (CAP-02A finding). Each restore is counted and reported.
+            if window.is_minimized() {
+                window.set_minimized(false);
+                restores += 1;
+            }
             if last_report.elapsed() >= Duration::from_secs(5) {
                 let s = preview.status();
                 let served = (drawn - drawn_at_report) as f64 / last_report.elapsed().as_secs_f64();
@@ -106,6 +113,7 @@ fn main() {
                            "previewed": s.stats.previewed_frames, "skipped": s.stats.skipped_frames,
                            "capture_fps": s.stats.capture_fps, "preview_fps_host": s.stats.preview_fps,
                            "pulled_fps": (served * 10.0).round() / 10.0,
+                           "pattern_minimized": window.is_minimized(), "pattern_restores": restores,
                            "frame": format!("{}x{}", s.stats.frame_width, s.stats.frame_height),
                            "preview": format!("{}x{}", s.stats.preview_width, s.stats.preview_height)})
                 );
@@ -127,7 +135,8 @@ fn main() {
                    "skipped": before_stop.stats.skipped_frames, "pulled": drawn, "invalid": invalid,
                    "elapsed_ms": before_stop.stats.elapsed_ms, "stop_ms": (stop_ms * 10.0).round() / 10.0,
                    "state_after_stop": format!("{:?}", after.state), "grant_after_stop": preview.has_grant(),
-                   "frame_after_stop": late, "dropped": after.stats.dropped_frames})
+                   "frame_after_stop": late, "dropped": after.stats.dropped_frames,
+                   "pattern_restores": restores})
         );
         if late || preview.has_grant() || invalid > 0 || after.state != LocalPreviewState::Stopped {
             failures += 1;

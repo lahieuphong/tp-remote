@@ -1,0 +1,11 @@
+﻿# CAP-02A-R2 WebView2 network review (2026-10-28)
+Session: r2-network (idle app, 240 s), evidence r2-network.tcp.log (LAN address redacted as <lan-ip>).
+Owners of all TCP connections: msedgewebview2.exe processes of the WebView2 runtime (children of tp-desktop). tp-desktop.exe itself: none.
+States: Established and Bound (local side of outbound connections); no Listen; no UDP endpoint.
+Remote endpoints: 8.8.4.4:443 = dns.google (DNS-over-HTTPS; this PC's DNS servers are 8.8.8.8, 8.8.4.4);
+  150.171.28.11:443 and 40.99.129.130:443 (not in the OS DNS cache, consistent with names resolved over DoH; owner attribution UNVERIFIED).
+Tauri/wry default WebView2 arguments (wry 0.57.1 src/webview2/mod.rs:311): --disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection
+  -> SmartScreen is already disabled; the Microsoft-range connections are another runtime service (UNVERIFIED which).
+App-controlled paths checked: no networking crate in the tp-desktop build graph (reqwest, hyper, ureq, curl, tungstenite, h2, quinn,
+  socket2, mio, TLS crates: none); no socket API in production Rust sources; frontend has no fetch/WebSocket/XHR/sendBeacon/EventSource/
+  toDataURL/storage use; production CSP connect-src = ipc: http://ipc.localhost; img-src 'self' data:.

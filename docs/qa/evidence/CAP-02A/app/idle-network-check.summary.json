@@ -1,0 +1,36 @@
+{
+    "label":  "idle-network-check",
+    "started":  "2026-10-28T16:44:46",
+    "exe":  "E:\\Phong_Nho_IT\\tp-remote\\target\\release\\tp-desktop.exe",
+    "exeSha256":  "2A93F2F354AA64C02B92A35B1A37C3D6E2FE36E90D7D6D88A179E738F93A0742",
+    "cpuCount":  16,
+    "sampleSec":  10,
+    "pid":  44824,
+    "ipcObserved":  true,
+    "events":  [
+
+               ],
+    "treePidsSeen":  [
+                         44824,
+                         51460,
+                         50984,
+                         52380,
+                         39820,
+                         50216,
+                         50316
+                     ],
+    "stateAtClose":  "",
+    "closeMessageSent":  true,
+    "exitedAfterClose":  true,
+    "exitCode":  null,
+    "survivingPids":  [
+
+                      ],
+    "cleanExit":  true,
+    "finished":  "2026-10-28T16:48:47",
+    "previewEvents":  [
+                          "tp-remote level=info event=app.start version=0.1.0 profile=release pid=44824",
+                          "tp-remote level=info event=app.ready",
+                          "tp-remote level=info event=app.exit"
+                      ]
+}

@@ -119,6 +119,14 @@ describe("LocalPreviewCard", () => {
     });
     const frameCalls = api.calls.filter((c) => c.cmd === "get_local_preview_frame");
     expect(frameCalls[0]?.args).toEqual({ generation: 3, painted: 0 });
+    // The drawn-frame counter reflects frames actually painted in this window.
+    await vi.waitFor(
+      () => {
+        const drawn = within(stats).getByText("Frames drawn").nextElementSibling?.textContent ?? "0";
+        expect(Number(drawn)).toBeGreaterThan(0);
+      },
+      { timeout: 2000 },
+    );
   });
 
   it("Stop capture stops and then states that no capture is active", async () => {

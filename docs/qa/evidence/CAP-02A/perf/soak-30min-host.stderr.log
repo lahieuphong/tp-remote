@@ -150,3 +150,4 @@ tp-remote level=info event=preview.stats generation=1 frames=37432 previewed=162
 tp-remote level=info event=preview.stats generation=1 frames=37689 previewed=16354 skipped=1190 painted=16353 fps=54.0 preview_fps=23.0
 tp-remote level=info event=preview.stats generation=1 frames=37954 previewed=16467 skipped=1198 painted=16467 fps=54.0 preview_fps=23.0
 tp-remote level=info event=preview.stats generation=1 frames=38182 previewed=16573 skipped=1208 painted=16573 fps=49.0 preview_fps=20.0
+tp-remote level=info event=preview.ended generation=1 reason=stoppedByUser frames=38412 previewed=16670 skipped=1210 dropped=0 elapsed_ms=1799808

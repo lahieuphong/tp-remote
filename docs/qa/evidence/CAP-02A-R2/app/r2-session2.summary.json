@@ -1,0 +1,44 @@
+{
+    "label":  "r2-session2",
+    "started":  "2026-10-28T20:47:18",
+    "exe":  "E:\\Phong_Nho_IT\\tp-remote\\target\\release\\tp-desktop.exe",
+    "exeSha256":  "FFE0F665DCE284586B06B54C858299367785974D217D9DF6A32EFE279CD3C646",
+    "cpuCount":  16,
+    "sampleSec":  5,
+    "patternPid":  38860,
+    "pid":  52748,
+    "ipcObserved":  true,
+    "appTopmost":  true,
+    "windowTitle":  "TP Remote - QA r2-session2 - PID 52748",
+    "appRect":  "20 20 1100x940",
+    "patternRect":  "1150 140 720x480",
+    "events":  [
+                   "screenshot 1 (160x28) at 9s, state=",
+                   "screenshot 2 (1100x940) at 102s, state=",
+                   "stop requested at 168s"
+               ],
+    "treePidsSeen":  [
+                         52748,
+                         1924,
+                         51072,
+                         36956,
+                         26016,
+                         31044,
+                         53168
+                     ],
+    "stateAtClose":  "",
+    "closeMessageSent":  true,
+    "exitedAfterClose":  true,
+    "exitCode":  null,
+    "patternExited":  true,
+    "survivingPids":  [
+
+                      ],
+    "cleanExit":  true,
+    "finished":  "2026-10-28T20:50:07",
+    "previewEvents":  [
+                          "tp-remote level=info event=app.start version=0.1.0 profile=release pid=52748",
+                          "tp-remote level=info event=app.ready",
+                          "tp-remote level=info event=app.exit"
+                      ]
+}

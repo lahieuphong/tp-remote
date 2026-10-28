@@ -19,7 +19,7 @@ use windows::Win32::Graphics::Gdi::{
 };
 use windows::Win32::UI::WindowsAndMessaging::{
     CS_HREDRAW, CS_VREDRAW, CreateWindowExW, DefWindowProcW, DestroyWindow, DispatchMessageW,
-    GetClientRect, GetMessageW, HWND_NOTOPMOST, HWND_TOPMOST, IsWindow, KillTimer, MSG,
+    GetClientRect, GetMessageW, HWND_NOTOPMOST, HWND_TOPMOST, IsIconic, IsWindow, KillTimer, MSG,
     PostMessageW, PostQuitMessage, RegisterClassExW, SW_SHOWMINNOACTIVE, SW_SHOWNOACTIVATE,
     SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE, SWP_NOZORDER, SetTimer, SetWindowPos, ShowWindow,
     TranslateMessage, WM_CLOSE, WM_DESTROY, WM_PAINT, WM_TIMER, WNDCLASSEXW, WS_EX_APPWINDOW,
@@ -244,6 +244,12 @@ impl TestPatternWindow {
             ErrorCategory::InternalError,
             "SetWindowPos failed",
         ))
+    }
+
+    /// Whether something (for example "Show desktop") minimized the window.
+    pub fn is_minimized(&self) -> bool {
+        // SAFETY: IsIconic accepts any handle value and only reads.
+        unsafe { IsIconic(HWND(self.hwnd as *mut core::ffi::c_void)) }.as_bool()
     }
 
     /// Minimizes (`true`) or restores (`false`) the window without activating it.

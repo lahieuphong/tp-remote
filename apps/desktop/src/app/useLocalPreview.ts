@@ -17,6 +17,8 @@ export interface LocalPreviewView {
   error: CoreApiError | null;
   /** Frames this window drew during the last second (measured; not the capture rate). */
   drawnFps: number;
+  /** Frames this window has drawn in the current run. */
+  drawnFrames: number;
   start: () => void;
   stop: () => void;
   canvasRef: RefObject<HTMLCanvasElement | null>;
@@ -48,6 +50,7 @@ export function useLocalPreview(): LocalPreviewView {
   const [displays, setDisplays] = useState<CaptureDisplays | null>(null);
   const [error, setError] = useState<CoreApiError | null>(null);
   const [drawnFps, setDrawnFps] = useState(0);
+  const [drawnFrames, setDrawnFrames] = useState(0);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const active = status !== null && ACTIVE.includes(status.state);
@@ -121,6 +124,7 @@ export function useLocalPreview(): LocalPreviewView {
       const since = performance.now() - 1000;
       while ((drawn[0] ?? Infinity) < since) drawn.shift();
       setDrawnFps(drawn.length);
+      setDrawnFrames(painted);
     }, 500);
     return () => {
       cancelled = true;
@@ -132,6 +136,7 @@ export function useLocalPreview(): LocalPreviewView {
   const start = useCallback(() => {
     setError(null);
     setDrawnFps(0);
+    setDrawnFrames(0);
     startLocalPreview().then(setStatus, (e: unknown) => {
       setError(toCoreApiError(e));
     });
@@ -143,5 +148,14 @@ export function useLocalPreview(): LocalPreviewView {
     });
   }, []);
 
-  return { status, displays, error, drawnFps: capturing ? drawnFps : 0, start, stop, canvasRef };
+  return {
+    status,
+    displays,
+    error,
+    drawnFps: capturing ? drawnFps : 0,
+    drawnFrames: capturing ? drawnFrames : 0,
+    start,
+    stop,
+    canvasRef,
+  };
 }

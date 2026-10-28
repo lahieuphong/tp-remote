@@ -1,0 +1,64 @@
+20:50:16.984 watch started for 900 s
+20:50:19.643 FOREGROUND hwnd=35919330 class=ConsoleWindowClass title='E:\Phong_Nho_IT\tp-remote\target\release\tp-test-pattern.exe' process=tp-test-pattern#48768
+20:50:19.868 FOREGROUND hwnd=51975282 class=Tauri Window title='TP Remote' process=tp-desktop#16388
+20:50:46.944 MINIMIZE_START hwnd=51975282 class=Tauri Window title='TP Remote - QA r2-session3 - PID 16388' process=tp-desktop#16388
+20:50:46.951 FOREGROUND hwnd=35919330 class=ConsoleWindowClass title='E:\Phong_Nho_IT\tp-remote\target\release\tp-test-pattern.exe' process=tp-test-pattern#48768
+20:50:48.499 FOREGROUND hwnd=53415188 class=TpRemoteTestPattern title='TP Remote Test Pattern' process=tp-test-pattern#48768
+20:50:48.587 MINIMIZE_START hwnd=53415188 class=TpRemoteTestPattern title='TP Remote Test Pattern' process=tp-test-pattern#48768
+20:50:48.594 FOREGROUND hwnd=35919330 class=ConsoleWindowClass title='E:\Phong_Nho_IT\tp-remote\target\release\tp-test-pattern.exe' process=tp-test-pattern#48768
+20:50:49.761 MINIMIZE_START hwnd=35919330 class=ConsoleWindowClass title='E:\Phong_Nho_IT\tp-remote\target\release\tp-test-pattern.exe' process=tp-test-pattern#48768
+20:50:49.778 FOREGROUND hwnd=395694 class=Chrome_WidgetWin_1 title='[redacted: not TP Remote]' process=chrome#25412
+20:50:53.585 FOREGROUND hwnd=132042 class=Windows.UI.Core.CoreWindow title='[redacted: not TP Remote]' process=SearchHost#21300
+20:50:54.544 FOREGROUND hwnd=395694 class=Chrome_WidgetWin_1 title='[redacted: not TP Remote]' process=chrome#25412
+20:51:58.678 FOREGROUND hwnd=132042 class=Windows.UI.Core.CoreWindow title='[redacted: not TP Remote]' process=SearchHost#21300
+20:52:04.276 FOREGROUND hwnd=395694 class=Chrome_WidgetWin_1 title='[redacted: not TP Remote]' process=chrome#25412
+20:52:11.478 FOREGROUND hwnd=789140 class=XamlExplorerHostIslandWindow title='[redacted: not TP Remote]' process=explorer#11088
+20:52:11.534 FOREGROUND hwnd=329458 class=CabinetWClass title='[redacted: not TP Remote]' process=explorer#11088
+20:52:13.376 MINIMIZE_START hwnd=329458 class=CabinetWClass title='[redacted: not TP Remote]' process=explorer#11088
+20:52:13.385 FOREGROUND hwnd=395694 class=Chrome_WidgetWin_1 title='[redacted: not TP Remote]' process=chrome#25412
+20:52:34.485 FOREGROUND hwnd=789140 class=XamlExplorerHostIslandWindow title='[redacted: not TP Remote]' process=explorer#11088
+20:52:34.532 FOREGROUND hwnd=11275546 class=Chrome_WidgetWin_1 title='[redacted: not TP Remote]' process=Code#17752
+20:52:39.446 FOREGROUND hwnd=789140 class=XamlExplorerHostIslandWindow title='[redacted: not TP Remote]' process=explorer#11088
+20:52:39.567 FOREGROUND hwnd=6424834 class=Chrome_WidgetWin_1 title='[redacted: not TP Remote]' process=Code#17752
+20:53:01.225 MINIMIZE_END hwnd=53415188 class=TpRemoteTestPattern title='TP Remote Test Pattern' process=tp-test-pattern#48768
+20:53:01.230 MINIMIZE_END hwnd=51975282 class=Tauri Window title='TP Remote - QA r2-session3 - PID 16388' process=tp-desktop#16388
+20:53:02.340 FOREGROUND hwnd=51975282 class=Tauri Window title='TP Remote - QA r2-session3 - PID 16388' process=tp-desktop#16388
+20:53:02.573 FOREGROUND hwnd=14291588 class=ProxyModalWindow title='[redacted: not TP Remote]' process=explorer#11088
+20:53:02.663 FOREGROUND hwnd=23662770 class=ApplicationFrameWindow title='Capture with TP Remote - QA r2-session3 - PID 16388' process=explorer#11088
+20:53:05.607 FOREGROUND hwnd=6424834 class=Chrome_WidgetWin_1 title='[redacted: not TP Remote]' process=Code#17752
+20:53:19.938 FOREGROUND hwnd=23662770 class=ApplicationFrameWindow title='Capture with TP Remote - QA r2-session3 - PID 16388' process=explorer#11088
+20:53:19.947 FOREGROUND hwnd=53415188 class=TpRemoteTestPattern title='TP Remote Test Pattern' process=tp-test-pattern#48768
+20:53:20.040 MINIMIZE_START hwnd=53415188 class=TpRemoteTestPattern title='TP Remote Test Pattern' process=tp-test-pattern#48768
+20:53:20.046 FOREGROUND hwnd=6424834 class=Chrome_WidgetWin_1 title='[redacted: not TP Remote]' process=Code#17752
+20:53:21.096 FOREGROUND hwnd=14291588 class=ProxyModalWindow title='[redacted: not TP Remote]' process=explorer#11088
+20:53:21.101 FOREGROUND hwnd=23662770 class=ApplicationFrameWindow title='Capture with TP Remote - QA r2-session3 - PID 16388' process=explorer#11088
+20:53:22.552 FOREGROUND hwnd=14291588 class=ProxyModalWindow title='[redacted: not TP Remote]' process=explorer#11088
+20:53:22.557 FOREGROUND hwnd=23662770 class=ApplicationFrameWindow title='Capture with TP Remote - QA r2-session3 - PID 16388' process=explorer#11088
+20:53:30.951 FOREGROUND hwnd=14291588 class=ProxyModalWindow title='[redacted: not TP Remote]' process=explorer#11088
+20:53:30.955 FOREGROUND hwnd=23662770 class=ApplicationFrameWindow title='Capture with TP Remote - QA r2-session3 - PID 16388' process=explorer#11088
+20:53:31.151 FOREGROUND hwnd=14291588 class=ProxyModalWindow title='[redacted: not TP Remote]' process=explorer#11088
+20:53:31.156 FOREGROUND hwnd=23662770 class=ApplicationFrameWindow title='Capture with TP Remote - QA r2-session3 - PID 16388' process=explorer#11088
+20:53:32.390 FOREGROUND hwnd=6424834 class=Chrome_WidgetWin_1 title='[redacted: not TP Remote]' process=Code#17752
+20:53:34.991 FOREGROUND hwnd=14291588 class=ProxyModalWindow title='[redacted: not TP Remote]' process=explorer#11088
+20:53:35.001 FOREGROUND hwnd=23662770 class=ApplicationFrameWindow title='Capture with TP Remote - QA r2-session3 - PID 16388' process=explorer#11088
+20:53:36.340 FOREGROUND hwnd=14291588 class=ProxyModalWindow title='[redacted: not TP Remote]' process=explorer#11088
+20:53:36.344 FOREGROUND hwnd=23662770 class=ApplicationFrameWindow title='Capture with TP Remote - QA r2-session3 - PID 16388' process=explorer#11088
+20:53:37.869 FOREGROUND hwnd=14291588 class=ProxyModalWindow title='[redacted: not TP Remote]' process=explorer#11088
+20:53:37.876 FOREGROUND hwnd=23662770 class=ApplicationFrameWindow title='Capture with TP Remote - QA r2-session3 - PID 16388' process=explorer#11088
+20:53:42.601 FOREGROUND hwnd=51975282 class=Tauri Window title='TP Remote - QA r2-session3 - PID 16388' process=tp-desktop#16388
+20:53:42.918 MINIMIZE_END hwnd=53415188 class=TpRemoteTestPattern title='TP Remote Test Pattern' process=tp-test-pattern#48768
+20:53:44.763 FOREGROUND hwnd=53415188 class=TpRemoteTestPattern title='TP Remote Test Pattern' process=tp-test-pattern#48768
+20:53:44.824 MINIMIZE_START hwnd=53415188 class=TpRemoteTestPattern title='TP Remote Test Pattern' process=tp-test-pattern#48768
+20:53:44.834 FOREGROUND hwnd=6424834 class=Chrome_WidgetWin_1 title='[redacted: not TP Remote]' process=Code#17752
+20:53:45.897 FOREGROUND hwnd=51975282 class=Tauri Window title='TP Remote - QA r2-session3 - PID 16388' process=tp-desktop#16388
+20:53:45.988 MINIMIZE_START hwnd=51975282 class=Tauri Window title='TP Remote - QA r2-session3 - PID 16388' process=tp-desktop#16388
+20:53:45.996 FOREGROUND hwnd=6424834 class=Chrome_WidgetWin_1 title='[redacted: not TP Remote]' process=Code#17752
+20:53:47.272 FOREGROUND hwnd=11275546 class=Chrome_WidgetWin_1 title='[redacted: not TP Remote]' process=Code#17752
+20:53:51.194 FOREGROUND hwnd=6424834 class=Chrome_WidgetWin_1 title='[redacted: not TP Remote]' process=Code#17752
+20:53:53.544 FOREGROUND hwnd=23990450 class=#32770 title='[redacted: not TP Remote]' process=Code#41860
+20:53:56.234 FOREGROUND hwnd=6424834 class=Chrome_WidgetWin_1 title='[redacted: not TP Remote]' process=Code#17752
+20:53:57.890 FOREGROUND hwnd=66258 class=Shell_TrayWnd title='[redacted: not TP Remote]' process=explorer#11088
+20:53:57.981 FOREGROUND hwnd=789140 class=XamlExplorerHostIslandWindow title='[redacted: not TP Remote]' process=explorer#11088
+20:54:01.908 FOREGROUND hwnd=395694 class=Chrome_WidgetWin_1 title='[redacted: not TP Remote]' process=chrome#25412
+20:54:08.185 FOREGROUND hwnd=48304670 class=Windows.UI.Core.CoreWindow title='[redacted: not TP Remote]' process=ScreenClippingHost#35856
+20:54:11.392 FOREGROUND hwnd=395694 class=Chrome_WidgetWin_1 title='[redacted: not TP Remote]' process=chrome#25412

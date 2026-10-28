@@ -301,7 +301,7 @@ CAP-02A adds the first operating-system capability: Windows.Graphics.Capture, us
 | SR-03 no streaming before authorization | Unchanged for remote: no transport exists, and `platform_capabilities()` = NONE. Local preview frames are served only under a live `LocalPreviewGrant` (TESTED) |
 | SR-04 visible capture indicator | Windows yellow border never disabled (static check TESTED); "Capturing" badge and Stop control in the UI. Border observed on the device: see CAP-02A test results |
 | SR-10 no secrets or screen contents in logs | Preview events log counters and fixed identifiers only; window titles and pixels never (TESTED) |
-| TM-15 no localhost servers | Frames reach the WebView only through Tauri IPC (no socket); 0 TCP/UDP endpoints observed during capture |
+| TM-15 no localhost servers | Frames reach the WebView only through Tauri IPC (no socket). No listening TCP socket and no UDP endpoint observed. The WebView2 runtime's own processes open outbound HTTPS connections (CAP-02A review F-CAP-8, R-8), not made by TP Remote code |
 | TM-16 WebView compromise | New impact: script in the main window could open the picker repeatedly and could read preview pixels while a preview runs. A user selection is still required; one request at a time; residual risk recorded (CAP-02A review R-1, R-2) |
 | TM-22 OS permissions | Windows needs no capture permission for WGC; none is requested. Secure desktop and protected content are not captured and not bypassed |
 | T-SEC-01 (denied capture permission) | Windows: not applicable (no permission prompt). macOS half: FUTURE (CAP-02B) |

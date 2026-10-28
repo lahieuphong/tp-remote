@@ -1,4 +1,4 @@
-﻿
+
 > tp-remote@0.1.0 check
 > node scripts/check.mjs
 
@@ -6,7 +6,7 @@
 === Rust format: cargo fmt --all -- --check
 node.exe : 'cargo' is not recognized as an internal or external command,
 At line:1 char:1
-+ & "C:\Program Files\nodejs/node.exe" "C:\Users\LA VIET PHONG\AppData\ ...
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\<user>\AppData\ ...
 + ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : NotSpecified: ('cargo' is not ...ternal command,:String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError

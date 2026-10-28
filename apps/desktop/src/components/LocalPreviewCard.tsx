@@ -54,7 +54,7 @@ function Stat({ label, value, hint }: { label: string; value: string; hint?: str
 }
 
 export function LocalPreviewCard({ className = "" }: { className?: string }) {
-  const { status, displays, error, drawnFps, start, stop, canvasRef } = useLocalPreview();
+  const { status, displays, error, drawnFps, drawnFrames, start, stop, canvasRef } = useLocalPreview();
   const state = status?.state ?? null;
   const capturing = state === "capturing" || state === "stopping";
 
@@ -158,6 +158,7 @@ export function LocalPreviewCard({ className = "" }: { className?: string }) {
             <Stat label="Elapsed" value={duration(status.stats.elapsedMs)} />
             <Stat label="Frames captured" value={String(status.stats.capturedFrames)} />
             <Stat label="Frames previewed" value={String(status.stats.previewedFrames)} />
+            <Stat label="Frames drawn" value={String(drawnFrames)} hint="in this window" />
             <Stat
               label="Skipped / dropped"
               value={`${String(status.stats.skippedFrames)} / ${String(status.stats.droppedFrames)}`}

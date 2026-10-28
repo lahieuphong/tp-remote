@@ -35,7 +35,16 @@ param(
   [int]$PatternH = 760,
   [switch]$NoPattern,
   [switch]$NoGpu,
-  [int]$ExitTimeoutSec = 15
+  [int]$ExitTimeoutSec = 15,
+  # CAP-02A-R2: where to put the TP Remote window (physical pixels; default: primary display).
+  [int]$AppX = 20,
+  [int]$AppY = 20,
+  [int]$AppW = 1100,
+  [int]$AppH = 940,
+  [switch]$KeepAppPosition,
+  # Keep the TP Remote window above other windows (CAP-02A-R2: it was hidden behind the
+  # operator's editor windows).
+  [switch]$AppTopmost
 )
 
 $ErrorActionPreference = "Stop"
@@ -60,6 +69,10 @@ public static class TpQa {
   [DllImport("user32.dll")] public static extern bool SetWindowPos(IntPtr h, IntPtr after, int x, int y, int cx, int cy, uint flags);
   [DllImport("user32.dll")] public static extern bool IsWindowVisible(IntPtr h);
   [DllImport("dwmapi.dll")] public static extern int DwmFlush();
+  [DllImport("user32.dll", CharSet = CharSet.Unicode)] public static extern bool SetWindowTextW(IntPtr h, string text);
+  [DllImport("user32.dll")] public static extern bool IsIconic(IntPtr h);
+  [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
+  public static string RectText(IntPtr h) { RECT r; GetWindowRect(h, out r); return r.Left + " " + r.Top + " " + (r.Right - r.Left) + "x" + (r.Bottom - r.Top); }
 
   public static string Capture(IntPtr h, string path) {
     RECT r; GetWindowRect(h, out r);
@@ -101,7 +114,7 @@ function Wait-Until([scriptblock]$condition, [int]$timeoutSec) {
   return $false
 }
 
-function Last-PreviewEvent([string]$path) {
+function Get-LastPreviewEvent([string]$path) {
   if (-not (Test-Path $path)) { return "" }
   $line = Get-Content $path -Tail 200 -ErrorAction SilentlyContinue | Where-Object { $_ -match 'event=preview\.' } | Select-Object -Last 1
   if ($null -eq $line) { return "" }
@@ -110,6 +123,9 @@ function Last-PreviewEvent([string]$path) {
 
 if (@(Get-Process -Name "tp-desktop" -ErrorAction SilentlyContinue).Count -gt 0) {
   throw "tp-desktop is already running; refusing to start a second instance."
+}
+if (Test-Path "$base.summary.json") {
+  throw "evidence for label '$Label' already exists; choose a new label."
 }
 foreach ($flag in "shot", "resize", "closepattern", "stop") { Remove-Item "$base.$flag" -ErrorAction SilentlyContinue }
 
@@ -138,9 +154,26 @@ $summary.ipcObserved = Wait-Until {
 } 30
 [void](Wait-Until { $app.Refresh(); $app.MainWindowHandle -ne [IntPtr]::Zero -and [TpQa]::IsWindowVisible($app.MainWindowHandle) } 10)
 $hwnd = $app.MainWindowHandle
+if (-not $KeepAppPosition) {
+  # SWP_NOZORDER | SWP_NOACTIVATE
+  [void][TpQa]::SetWindowPos($hwnd, [IntPtr]::Zero, $AppX, $AppY, $AppW, $AppH, 0x0004 -bor 0x0010)
+}
+if ($AppTopmost) {
+  # HWND_TOPMOST; SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE
+  [void][TpQa]::SetWindowPos($hwnd, [IntPtr](-1), 0, 0, 0, 0, 0x0001 -bor 0x0002 -bor 0x0010)
+  $summary.appTopmost = $true
+}
+# Label the window so the operator can tell this instance from any other.
+$title = "TP Remote - QA $Label - PID $($app.Id)"
+[void][TpQa]::SetWindowTextW($hwnd, $title)
+$summary.windowTitle = $title
+$summary.appRect = [TpQa]::RectText($hwnd)
+if ($null -ne $pattern) { $pattern.Refresh(); $summary.patternRect = [TpQa]::RectText($pattern.MainWindowHandle) }
+$eventsLog = "$base.events.log"
+$seenLines = 0
 
 $csv = "$base.samples.csv"
-"t_s,state_event,tree_cpu_pct,main_cpu_pct,main_ws_mb,tree_ws_mb,main_private_mb,main_handles,main_threads,tree_procs,gpu_max_engine_pct,gpu_3d_pct,tcp,udp" |
+"t_s,state_event,tree_cpu_pct,main_cpu_pct,main_ws_mb,tree_ws_mb,main_private_mb,main_handles,main_threads,tree_procs,gpu_max_engine_pct,gpu_3d_pct,tcp,udp,app_minimized,app_visible,app_foreground,app_rect,pattern_minimized" |
   Out-File -Encoding utf8 $csv
 $started = Get-Date
 $lastSample = $started.AddSeconds(-$SampleSec)
@@ -152,12 +185,21 @@ $summary.events = @()
 
 try {
   while (((Get-Date) - $started).TotalSeconds -lt $DurationSec -and -not $app.HasExited) {
+    # Every new app log line, with wall-clock time, for correlation with operator actions.
+    $lines = @(Get-Content $stderrLog -ErrorAction SilentlyContinue)
+    if ($lines.Count -gt $seenLines) {
+      $stamp = Get-Date
+      $lines[$seenLines..($lines.Count - 1)] | ForEach-Object {
+        "$($stamp.ToString('HH:mm:ss.fff')) t=$([int]($stamp - $started).TotalSeconds)s $_"
+      } | Out-File -Append -Encoding utf8 $eventsLog
+      $seenLines = $lines.Count
+    }
     if (Test-Path "$base.stop") { Remove-Item "$base.stop"; $summary.events += "stop requested at $([int]((Get-Date) - $started).TotalSeconds)s"; break }
     if (Test-Path "$base.shot") {
       Remove-Item "$base.shot"; $shots++
       foreach ($i in 1..4) { [void][TpQa]::DwmFlush() }
       $size = [TpQa]::Capture($hwnd, "$base.shot-$shots.png")
-      $summary.events += "screenshot $shots ($size) at $([int]((Get-Date) - $started).TotalSeconds)s, state=$(Last-PreviewEvent $stderrLog)"
+      $summary.events += "screenshot $shots ($size) at $([int]((Get-Date) - $started).TotalSeconds)s, state=$(Get-LastPreviewEvent $stderrLog)"
     }
     if ((Test-Path "$base.resize") -and $null -ne $pattern) {
       Remove-Item "$base.resize"
@@ -205,12 +247,23 @@ try {
           }
         } catch { $gpuMax = "err" }
       }
-      $tcp = @(Get-NetTCPConnection -ErrorAction SilentlyContinue | Where-Object { $ids -contains $_.OwningProcess }).Count
+      $tcpRows = @(Get-NetTCPConnection -ErrorAction SilentlyContinue | Where-Object { $ids -contains $_.OwningProcess })
+      $tcp = $tcpRows.Count
+      if ($tcp -gt 0) {
+        # Details, to tell listeners from outbound or loopback connections of WebView2.
+        $names = @{}; foreach ($t in $tree) { $names[[int]$t.ProcessId] = $t.Name }
+        $tcpRows | ForEach-Object {
+          "t=$([int]($now - $started).TotalSeconds)s $($_.State) $($_.LocalAddress):$($_.LocalPort) -> $($_.RemoteAddress):$($_.RemotePort) $($names[[int]$_.OwningProcess])#$($_.OwningProcess)"
+        } | Out-File -Append -Encoding utf8 "$base.tcp.log"
+      }
       $udp = @(Get-NetUDPEndpoint -ErrorAction SilentlyContinue | Where-Object { $ids -contains $_.OwningProcess }).Count
       $row = @(
-        [int]($now - $started).TotalSeconds, (Last-PreviewEvent $stderrLog), $treeCpu, $mainCpu,
+        [int]($now - $started).TotalSeconds, (Get-LastPreviewEvent $stderrLog), $treeCpu, $mainCpu,
         [math]::Round($main.WorkingSet64 / 1MB, 1), $treeWs, [math]::Round($main.PrivateMemorySize64 / 1MB, 1),
-        $main.HandleCount, $main.Threads.Count, $procs.Count, $gpuMax, $gpu3d, $tcp, $udp
+        $main.HandleCount, $main.Threads.Count, $procs.Count, $gpuMax, $gpu3d, $tcp, $udp,
+        [TpQa]::IsIconic($hwnd), [TpQa]::IsWindowVisible($hwnd), ([TpQa]::GetForegroundWindow() -eq $hwnd),
+        ([TpQa]::RectText($hwnd) -replace ' ', '_'),
+        $(if ($null -ne $pattern -and -not $pattern.HasExited) { $pattern.Refresh(); [TpQa]::IsIconic($pattern.MainWindowHandle) } else { '' })
       ) -join ","
       $row | Out-File -Append -Encoding utf8 $csv
     }
@@ -222,7 +275,7 @@ catch {
 }
 finally {
   $summary.treePidsSeen = $allPids
-  $summary.stateAtClose = Last-PreviewEvent $stderrLog
+  $summary.stateAtClose = Get-LastPreviewEvent $stderrLog
   $closeRequested = $false
   if (-not $app.HasExited) { $closeRequested = $app.CloseMainWindow() }
   $summary.closeMessageSent = $closeRequested
@@ -243,7 +296,9 @@ if ($survivors.Count -gt 0) {
 }
 $summary.cleanExit = $gone -and $summary.exitedAfterClose -and $closeRequested
 $summary.finished = (Get-Date).ToString("s")
-$summary.previewEvents = @(Get-Content $stderrLog -ErrorAction SilentlyContinue | Where-Object { $_ -match 'event=(preview|app)\.' } | Select-Object -Last 400)
+# Plain strings: Get-Content adds provider metadata (user profile path, drives) that
+# ConvertTo-Json would otherwise serialize into the evidence.
+$summary.previewEvents = @(Get-Content $stderrLog -ErrorAction SilentlyContinue | ForEach-Object { [string]$_ } | Where-Object { $_ -match 'event=(preview|app)\.' } | Select-Object -Last 400)
 $json = $summary | ConvertTo-Json -Depth 5
 [IO.File]::WriteAllText("$base.summary.json", $json, (New-Object System.Text.UTF8Encoding($false)))
 "summary written: $base.summary.json cleanExit=$($summary.cleanExit)"

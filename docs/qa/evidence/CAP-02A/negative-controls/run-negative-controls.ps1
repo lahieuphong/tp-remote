@@ -3,11 +3,12 @@
   that must catch it, expects that guard to FAIL, then restores the file byte-for-byte and
   verifies the SHA-256. Cargo.lock is hash-checked before and after the whole run.
   Run from the repository root:
-    powershell -NoProfile -File docs\qa\evidence\CAP-02A\negative-controls\run-negative-controls.ps1
+    powershell -NoProfile -File docs\qa\evidence\CAP-02A\negative-controls\run-negative-controls.ps1 [-Log <file>]
 #>
+param([string]$Log = "docs\qa\evidence\CAP-02A\negative-controls\negative-controls.log")
 $ErrorActionPreference = "Stop"
 $env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"
-$log = "docs\qa\evidence\CAP-02A\negative-controls\negative-controls.log"
+$log = $Log
 "# CAP-02A negative controls, $(Get-Date -Format s)" | Out-File -Encoding utf8 $log
 $lockBefore = (Get-FileHash Cargo.lock -Algorithm SHA256).Hash
 

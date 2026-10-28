@@ -1,4 +1,4 @@
-﻿
+
 > tp-remote@0.1.0 check
 > node scripts/check.mjs
 
@@ -8,7 +8,7 @@
 === Rust check: cargo check --workspace --all-targets --locked
 node.exe :     Checking tp-contracts v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-contracts)
 At line:1 char:1
-+ & "C:\Program Files\nodejs/node.exe" "C:\Users\LA VIET PHONG\AppData\ ...
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\<user>\AppData\ ...
 + ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : NotSpecified: (    Checking tp...s\tp-contracts):String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError

@@ -149,8 +149,11 @@ Keep the test-pattern window uncovered. Windows delivered no frames for a covere
 ## Known limitations (CAP-02A)
 
 - No remote-desktop functionality of any kind. The UI says so explicitly, and `platform_capabilities()` advertises nothing. The local preview is local only.
-- The local preview works on Windows only. The app-level picker flow with a person was **not** fully verified in CAP-02A; real frames were verified at provider and host level ([CAP-02A test results](docs/qa/CAP-02A-test-results.md)).
-- A previewed window that is covered by another window stops updating (Windows delivers no frames for it). Displays are not affected.
+- The local preview works on Windows only. The app-level picker flow with a person was **not** completed (CAP-02A and CAP-02A-R2):
+  - In the real app, a click on Start reaches the backend and opens the Windows picker for the right window.
+  - No target selection by a person was obtained, so a live preview in the real WebView is still unverified.
+  - Real frames were verified at provider and host level ([CAP-02A test results](docs/qa/CAP-02A-test-results.md) §3, §10).
+- A previewed window that is covered by another window, or minimized, stops updating (Windows delivers no frames for it). Displays are not affected.
 - Each capture run leaves about 3 process handles that Windows does not return until the app exits ([security review](docs/security/CAP-02A-security-review.md) F-CAP-4).
 - Verified on Windows 11 x64 at 100% display scaling only. Other scaling factors and macOS are untested. The OS support policy (U-08) is provisional ([ADR-004](docs/architecture/ADR-004-platform-support.md)).
 - IPC commands: `get_app_info` and five local-preview commands. None of them can name a capture target. The session lifecycle and remote authorization policy are not exposed over IPC.

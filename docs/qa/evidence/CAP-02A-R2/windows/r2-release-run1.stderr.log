@@ -1,0 +1,5 @@
+tp-remote level=info event=app.start version=0.1.0 profile=release pid=50520
+tp-remote level=info event=app.ready
+tp-remote level=info event=ipc.preview_status_polls count=1 state=ready
+tp-remote level=info event=ipc.get_app_info result=ok
+tp-remote level=info event=app.exit

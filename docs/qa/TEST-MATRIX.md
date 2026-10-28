@@ -293,4 +293,11 @@ Results: [CAP-02A-test-results](CAP-02A-test-results.md).
 - T-SEC-01: not applicable on Windows (no permission prompt); macOS half CAP-02B.
 - T-UNI-27: amended (capture implemented).
 
+**CAP-02A-R2 (2026-10-28):** T-DEV-21 was executed partially:
+- picker shown for the correct window;
+- cancel captures nothing;
+- restart after exit.
+
+The picker selection by a person, the live preview, 10 app cycles and exit while capturing are NOT RUN. Results: [CAP-02A test results §10](CAP-02A-test-results.md#10-cap-02a-r2-reconciliation).
+
 **CAP-02A gate list:** T-STA-11; T-UNI-30 … 33; T-INT-14; T-UI-06; T-DEV-18 … 21; T-PRF-11; T-INT-02; the BOOT-01 and BOOT-02 regression suites.

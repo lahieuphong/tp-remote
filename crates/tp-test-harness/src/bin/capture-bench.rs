@@ -124,6 +124,7 @@ fn main() {
                            "t_s": started.elapsed().as_secs_f64(), "frames": now.0,
                            "capture_fps": (fps * 10.0).round() / 10.0, "readbacks": rb.count,
                            "pattern_paints": pattern_paints(),
+                           "pattern_minimized": window.is_minimized(),
                            "superseded": stream.diagnostics().superseded,
                            "readback_ms_max": rb.max_us as f64 / 1000.0})
                 );
