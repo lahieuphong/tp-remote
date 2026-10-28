@@ -1,0 +1,14 @@
+{
+    "availability":  "available",
+    "state":  "capturing",
+    "generation":  3,
+    "target":  {
+                   "kind":  "display",
+                   "label":  "Display 2",
+                   "width":  1920,
+                   "height":  1080,
+                   "displayIndex":  0
+               },
+    "lastOutcome":  null,
+    "error":  null
+}

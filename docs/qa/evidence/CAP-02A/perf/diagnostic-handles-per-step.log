@@ -1,0 +1,13 @@
+﻿# CAP-02A handle diagnostic (temporary test crates/tp-test-harness/tests/capture_handle_diag.rs and testing::diag_setup_steps, removed after this run)
+# Handle counts via Get-Process from outside the code under test; each phase has one warm-up iteration and 1.5 s settle before/after.
+displays(): 50x delta_handles=0 (0.00/iter)
+target_for_window: 50x delta_handles=50 (1.00/iter)
+monitor_item_name: 50x delta_handles=50 (1.00/iter)
+setup step 1: 30x delta_handles=0 (0.00/iter)
+setup step 2: 30x delta_handles=0 (0.00/iter)
+setup step 3: 30x delta_handles=92 (3.07/iter)
+setup step 4: 30x delta_handles=90 (3.00/iter)
+setup step 5: 30x delta_handles=90 (3.00/iter)
+start+stop (no wait): 30x delta_handles=90 (3.00/iter)
+start+frames+stop: 30x delta_handles=90 (3.00/iter)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 69.47s

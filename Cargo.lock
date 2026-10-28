@@ -3505,6 +3505,7 @@ name = "tp-capture"
 version = "0.1.0"
 dependencies = [
  "tp-contracts",
+ "windows",
 ]
 
 [[package]]
@@ -3602,7 +3603,10 @@ name = "tp-test-harness"
 version = "0.1.0"
 dependencies = [
  "serde_json",
+ "tp-capture",
  "tp-contracts",
+ "tp-core",
+ "tp-diagnostics",
  "ts-rs",
 ]
 

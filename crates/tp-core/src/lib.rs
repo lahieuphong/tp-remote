@@ -5,20 +5,41 @@
 //! that combines the session registry with the security policy behind the
 //! `SessionManager` contract, the [`gate::InputGate`], and a monotonic clock.
 //!
-//! NOT IMPLEMENTED: nothing here performs capture, input injection, networking or
-//! prompts, and the desktop shell exposes none of it over IPC.
+//! IMPLEMENTED (CAP-02A): [`preview`], the local self-preview: the user picks a display
+//! or window in the Windows capture picker and sees it inside TP Remote. It is local
+//! only and has its own authorization ([`preview::LocalPreviewGrant`], ADR-007).
+//!
+//! NOT IMPLEMENTED: remote viewing, input injection, networking and consent prompts. The
+//! remote capability advertisement stays empty: a local preview is not a remote
+//! `ViewScreen` capability.
 #![forbid(unsafe_code)]
 
 pub mod clock;
 pub mod gate;
+pub mod preview;
 pub mod service;
+
+use std::sync::Arc;
 
 use tp_contracts::capability::PlatformCapabilities;
 use tp_contracts::ipc::{AppInfo, BuildProfile, EngineModuleStatus, PlatformInfo, RemoteFeatures};
 use tp_contracts::module::{ModuleDescriptor, ModuleState};
 
 /// Roadmap phase this build belongs to.
-pub const PHASE: &str = "BOOT-02";
+pub const PHASE: &str = "CAP-02A";
+
+/// The local preview service on this operating system's capture provider.
+pub type NativePreview = preview::LocalPreview<tp_capture::native::Provider>;
+
+/// Creates the local preview service with the real clock and provider.
+pub fn native_preview(logger: tp_diagnostics::Logger) -> NativePreview {
+    preview::LocalPreview::new(
+        tp_capture::native::Provider::new(),
+        Arc::new(clock::MonotonicClock::new()),
+        logger,
+        preview::PreviewConfig::default(),
+    )
+}
 
 /// Facts only the desktop shell knows.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -47,8 +68,8 @@ pub fn engine_modules() -> Vec<ModuleDescriptor> {
     ]
 }
 
-/// What this build can provide to a peer. Nothing, until real capture and input
-/// implementations exist (CAP-02, CTRL-05).
+/// What this build can provide to a *peer*. Nothing: CAP-02A captures for the local
+/// preview only, and there is no transport, consent flow or input yet (NET-03, CTRL-05).
 pub const fn platform_capabilities() -> PlatformCapabilities {
     PlatformCapabilities::NONE
 }
@@ -148,18 +169,19 @@ mod tests {
         assert_eq!(unique, expected);
     }
 
-    // T-CONTRACT-05: nothing that would provide a remote capability claims progress, and
-    // nothing is advertised.
+    // T-CONTRACT-05 (amended in CAP-02A): only tp-capture has an implementation (Windows
+    // local capture); nothing is advertised to peers, because a local preview is not a
+    // remote capability.
     #[test]
-    fn no_capability_crate_claims_an_implementation() {
+    fn no_capability_is_advertised_and_only_capture_has_progressed() {
         for m in engine_modules() {
             if CAPABILITY_CRATES.contains(&m.crate_name) {
-                assert_eq!(
-                    m.state,
-                    ModuleState::Foundation,
-                    "{} must stay Foundation",
-                    m.crate_name
-                );
+                let expected = if m.crate_name == "tp-capture" && cfg!(windows) {
+                    ModuleState::Partial
+                } else {
+                    ModuleState::Foundation
+                };
+                assert_eq!(m.state, expected, "{} state changed", m.crate_name);
             }
         }
         let platform = platform_capabilities();
@@ -176,7 +198,7 @@ mod tests {
     #[test]
     fn app_info_reports_this_build_honestly() {
         let info = app_info(shell());
-        assert_eq!(info.phase, "BOOT-02");
+        assert_eq!(info.phase, "CAP-02A");
         assert_eq!(info.remote_features, RemoteFeatures::NotImplemented);
         assert_eq!(info.protocol, tp_protocol::support());
         assert_eq!(info.platform.os, std::env::consts::OS);

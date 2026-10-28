@@ -13,8 +13,10 @@ fn json(relative: &str) -> Value {
     serde_json::from_str(&read(relative)).unwrap_or_else(|e| panic!("parse {relative}: {e}"))
 }
 
+// Updated in CAP-02A: the exact list now includes the five local-preview commands
+// (ADR-007). Anything else — core, plugin or wildcard permissions — still fails here.
 #[test]
-fn the_only_capability_grants_only_get_app_info_to_the_main_window() {
+fn the_only_capability_grants_only_the_app_commands_to_the_main_window() {
     let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("capabilities");
     let files: Vec<_> = std::fs::read_dir(&dir)
         .expect("read capabilities")
@@ -27,7 +29,14 @@ fn the_only_capability_grants_only_get_app_info_to_the_main_window() {
     assert_eq!(capability["windows"], serde_json::json!(["main"]));
     assert_eq!(
         capability["permissions"],
-        serde_json::json!(["allow-get-app-info"])
+        serde_json::json!([
+            "allow-get-app-info",
+            "allow-get-capture-displays",
+            "allow-get-local-preview-status",
+            "allow-start-local-preview",
+            "allow-stop-local-preview",
+            "allow-get-local-preview-frame"
+        ])
     );
     assert!(
         capability.get("remote").is_none(),

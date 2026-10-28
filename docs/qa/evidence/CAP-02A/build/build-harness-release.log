@@ -1,0 +1,9 @@
+﻿cargo :    Compiling tp-capture v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-capture)
+At line:1 char:456
++ ... TEXITCODE"; cargo build --release --locked -p tp-test-harness --bins  ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (   Compiling tp...tes\tp-capture):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+   Compiling tp-test-harness v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-test-harness)
+    Finished `release` profile [optimized] target(s) in 2.73s

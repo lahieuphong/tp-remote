@@ -100,3 +100,22 @@ flowchart TB
 6. Never log frame contents. `FrameMeta` is the only loggable data.
 7. Calls are made by `tp-core` only after `SessionService::authorize(…, Capability::ViewScreen, …)` allows them. `platform_capabilities()` must be changed deliberately, and the boundary test `no_production_platform_implementation_exists_yet` updated, when the provider lands.
 8. For macOS: `PermissionManager` status is re-queried each time, a "requires relaunch" state is handled, and nothing automates System Settings.
+
+## 7. CAP-02A status and contract amendment (2026-10-28)
+
+The capture contract was amended by [ADR-007](ADR-007-local-preview-authorization.md):
+- new items: `CaptureProvider::Target`, `CapturePicker`, `PickOutcome`, `PickerOwner`, `FrameReadback`, `TargetInfo`/`TargetKind`, `FrameMeta.generation`, and the `CaptureEvent::{TargetResized, TargetClosed, DeviceLost}` events;
+- `CaptureConfig.display` and `output_size` were removed.
+
+The pipeline is described in [CAP-02A-capture-pipeline](CAP-02A-capture-pipeline.md).
+
+| Contract | CAP-02A status |
+|---|---|
+| `CaptureProvider`, `CaptureStream`, `CapturePicker`, `FrameReadback` | **IMPLEMENTED** for Windows (`tp-capture::wgc`); TESTED and VERIFIED on DEV-W1. Other systems: the uninhabited `unsupported` provider (`NotImplemented`) |
+| `FrameSink` | Implemented by `tp-core::preview` (local preview sink) |
+| All other contracts | Unchanged: interface only |
+
+How the §6 handoff items were met:
+- **Items 1–6:** done.
+- **Item 7 (deliberate deviation):** the local preview is authorized by `LocalPreviewGrant`, not by `ViewScreen`. Remote viewing still requires `SessionService::authorize(…, ViewScreen, …)`, and `platform_capabilities()` stays NONE because no remote path exists. The boundary test was renamed and updated deliberately: `production_platform_implementations_exist_only_where_allowed`.
+- **Item 8 (macOS):** FUTURE (CAP-02B).

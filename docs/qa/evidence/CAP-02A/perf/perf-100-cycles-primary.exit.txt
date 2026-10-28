@@ -1,0 +1,1 @@
+﻿exit= cpuCount=16 args=--seconds 1 --cycles 100 --x 120 --y 120 --width 1280 --height 720 --topmost --preview 1280x720 --preview-fps 30

@@ -2,11 +2,21 @@
 
 export type { AppInfo } from "./AppInfo";
 export type { BuildProfile } from "./BuildProfile";
+export type { CaptureAvailability } from "./CaptureAvailability";
+export type { CaptureDisplay } from "./CaptureDisplay";
+export type { CaptureDisplays } from "./CaptureDisplays";
 export type { EngineModuleStatus } from "./EngineModuleStatus";
 export type { IpcError } from "./IpcError";
 export type { IpcErrorCode } from "./IpcErrorCode";
+export type { LocalPreviewState } from "./LocalPreviewState";
+export type { LocalPreviewStatus } from "./LocalPreviewStatus";
 export type { ModuleState } from "./ModuleState";
 export type { PlatformInfo } from "./PlatformInfo";
+export type { PreviewError } from "./PreviewError";
+export type { PreviewOutcome } from "./PreviewOutcome";
+export type { PreviewStats } from "./PreviewStats";
+export type { PreviewTarget } from "./PreviewTarget";
+export type { PreviewTargetKind } from "./PreviewTargetKind";
 export type { ProtocolSupport } from "./ProtocolSupport";
 export type { RemoteFeatures } from "./RemoteFeatures";
 export type { ShellInfo } from "./ShellInfo";

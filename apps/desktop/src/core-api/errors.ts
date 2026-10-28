@@ -23,6 +23,9 @@ export class CoreApiError extends Error {
 const IPC_ERROR_CODES: Record<IpcErrorCode, true> = {
   internal: true,
   injectedFault: true,
+  invalidState: true,
+  unavailable: true,
+  forbidden: true,
 };
 
 function isIpcErrorCode(value: unknown): value is IpcErrorCode {

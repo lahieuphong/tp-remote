@@ -61,6 +61,20 @@ pub const ALLOWED_KEYS: &[&str] = &[
     "command",
     "count",
     "message",
+    // CAP-02A local preview: counters, sizes and fixed identifiers only. Target labels
+    // (window titles) and pixels are never logged (CAP-02A security review §5).
+    "generation",
+    "target_kind",
+    "width",
+    "height",
+    "elapsed_ms",
+    "frames",
+    "previewed",
+    "skipped",
+    "dropped",
+    "painted",
+    "fps",
+    "preview_fps",
 ];
 
 pub const REDACTED: &str = "[REDACTED]";

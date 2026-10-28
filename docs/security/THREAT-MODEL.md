@@ -286,3 +286,25 @@ Engine-level controls now exist and are tested on Windows. Details, the trusted-
 | TM-25 stuck input | Teardown effect order TESTED; real release: FUTURE (CTRL-05) |
 
 No threat is downgraded on the strength of mock-level tests alone. Residual risks F-2 … F-7 remain open as listed in the BOOT-02 review.
+
+## 12. Status update (CAP-02A, 2026-10-28)
+
+CAP-02A adds the first operating-system capability: Windows.Graphics.Capture, used only for a **local self-preview**. Details are in [CAP-02A-security-review](CAP-02A-security-review.md) and [ADR-007](../architecture/ADR-007-local-preview-authorization.md).
+
+**New trust boundary (TB-LOCAL-PICK).**
+- The Windows capture picker is now the local selection boundary. The WebView can only *ask* for the picker.
+- A capture target exists only after the local user selects one in OS-drawn UI.
+- The local-preview grant (`LocalPreviewGrant`) is separate from remote consent and cannot become a remote grant.
+
+| Item | Status |
+|---|---|
+| SR-03 no streaming before authorization | Unchanged for remote: no transport exists, and `platform_capabilities()` = NONE. Local preview frames are served only under a live `LocalPreviewGrant` (TESTED) |
+| SR-04 visible capture indicator | Windows yellow border never disabled (static check TESTED); "Capturing" badge and Stop control in the UI. Border observed on the device: see CAP-02A test results |
+| SR-10 no secrets or screen contents in logs | Preview events log counters and fixed identifiers only; window titles and pixels never (TESTED) |
+| TM-15 no localhost servers | Frames reach the WebView only through Tauri IPC (no socket); 0 TCP/UDP endpoints observed during capture |
+| TM-16 WebView compromise | New impact: script in the main window could open the picker repeatedly and could read preview pixels while a preview runs. A user selection is still required; one request at a time; residual risk recorded (CAP-02A review R-1, R-2) |
+| TM-22 OS permissions | Windows needs no capture permission for WGC; none is requested. Secure desktop and protected content are not captured and not bypassed |
+| T-SEC-01 (denied capture permission) | Windows: not applicable (no permission prompt). macOS half: FUTURE (CAP-02B) |
+| T-SEC-18 no elevation | Medium integrity re-checked during capture (see test results) |
+
+No remote threat is downgraded by CAP-02A. The remote path (consent, PAKE, transport) is still FUTURE.

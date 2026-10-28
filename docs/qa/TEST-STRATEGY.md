@@ -226,3 +226,23 @@ All measurements record: device IDs, OS build, app build (commit hash once git i
 4. **Synthetic secrets.** Logging tests use recognisable synthetic values (e.g. `Hunter2-SYNTHETIC`, distinctive coordinates and key codes) and assert they never appear in rendered output.
 5. **Alias IDs.** Prompt-specific IDs (e.g. T-CORE-xx) are mapped to canonical TEST-MATRIX IDs (§13 of the matrix) and counted once.
 6. **Time.** Engine tests never sleep. Every time-dependent decision takes `now: MonoTime`. Only the Windows smoke scripts wait, and they wait on observable conditions with time limits.
+
+## 15. Additions from CAP-02A
+
+1. **Real-device tests are `#[ignore]` and run explicitly.**
+   - Tests that open windows or capture (`tp-test-harness/tests/capture_windows.rs`, `preview_windows.rs`) never run in routine `cargo test`.
+   - Real-device QA runs them with `--ignored --test-threads=1` and stores the output under `docs/qa/evidence/<PHASE>/provider/`.
+2. **Prove real frames with known content.**
+   - Capture tests target a synthetic test-pattern window with fixed colours.
+   - They read pixels back and compare them with the pattern, which proves the frames came from the OS and were not fabricated.
+   - No test captures private content into a file.
+3. **Monitor capture only for metadata.** Tests that capture whole monitors (approved per phase) check only size, timing and target mapping. They never read pixels back.
+4. **Measurements come from observations.**
+   - Frame rates come from OS frame timestamps (bench) or observed arrivals (host), and process metrics are sampled from outside the process (PowerShell).
+   - A run whose source stopped changing is not a performance result. The bench logs the source's own repaint counter (`pattern_paints`), so a stalled source can be told apart from a slow pipeline.
+5. **Host-level substitutes are labelled as such.**
+   - When an app-level manual step cannot be completed, the production host may be driven over real frames with a test-only picker stand-in (`WindowPickerForTests`).
+   - Such results are reported as "host level". They never stand in for the OS picker UI or the WebView rendering.
+6. **Operator reports are corroborated.** A manual step passes only if the app's own evidence (log events, process state, screenshots of TP Remote's window) agrees with the operator's report.
+7. **Diagnostics are temporary.**
+   - Temporary diagnostic tests are removed after use. Their output is kept as evidence with a header naming the removed file (for example `perf/diagnostic-handles-per-step.log`).

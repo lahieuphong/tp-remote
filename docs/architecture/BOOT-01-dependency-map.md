@@ -136,3 +136,22 @@ This inventory is an engineering record. **It is not a legal compliance certific
 | Third-party notices file for distributed builds | Not created (no distribution in BOOT-01); due in REL-09 |
 | Automated license gate | Report only, no failing gate. `cargo-deny` was not installed (not approved); proposed for a later phase |
 | Rust advisory audit (`cargo audit`) | Not run: tool not installed (not approved). npm audit: 0 vulnerabilities |
+
+## 6. CAP-02A changes (2026-10-28)
+
+| Change | Detail |
+|---|---|
+| New direct external dependency | `windows` 0.62.2 (Microsoft windows-rs), MIT OR Apache-2.0, MSRV 1.82, `[target.'cfg(windows)']` dependency of `tp-capture` only. Approved by the user before installation. It is the version Tauri (tao, wry, webview2-com) already locks, so **no new package** entered `Cargo.lock` |
+| Features enabled by tp-capture | `Foundation`, `Graphics_Capture`, `Graphics_DirectX_Direct3D11`, `Win32_Foundation`, `Win32_Graphics_Direct3D`, `Win32_Graphics_Direct3D11`, `Win32_Graphics_Dxgi`, `Win32_Graphics_Dxgi_Common`, `Win32_Graphics_Gdi`, `Win32_System_WinRT_Direct3D11`, `Win32_System_WinRT_Graphics_Capture`, `Win32_UI_HiDpi`, `Win32_UI_Shell`, `Win32_UI_WindowsAndMessaging` (`Win32_System_Performance` was approved but is not needed) |
+| Transitive dependencies of `windows` 0.62.2 | `windows-core` 0.62.2, `windows-future` 0.3.2, `windows-collections` 0.3.2, `windows-numerics` 0.3.1: all already locked through Tauri |
+| `Cargo.lock` diff | Dependency-list lines only: `"windows"` under `tp-capture`; `"tp-capture"`, `"tp-core"`, `"tp-diagnostics"` under `tp-test-harness` (internal, test-only) |
+| New internal edges | `tp-test-harness` → `tp-capture` (feature `test-support`), `tp-core`, `tp-diagnostics` (allowed: the harness may depend on every engine crate) |
+| New feature | `tp-capture/test-support` (programmatic targets, synthetic window). Never in the app graph (`the_app_build_graph_has_no_test_support`) |
+| Single `windows` version in the app graph | Enforced by the same test (CAP-02A addition) |
+| npm | No change (`package.json`, `package-lock.json` untouched) |
+
+Rejected alternatives, both unchanged and not added:
+- `wgc` 3.1.0: MIT OR Apache-2.0; about 2.3k downloads; released 2026-10-25.
+- `windows-capture` 2.0.1: MIT; includes encoding and file-saving features the app must not ship.
+
+Both would add a wrapper layer over windows-rs.

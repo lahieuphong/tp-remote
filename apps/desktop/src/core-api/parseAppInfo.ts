@@ -9,6 +9,7 @@ import type {
   ShellInfo,
 } from "../bindings";
 import { CoreApiError } from "./errors";
+import { ContractViolation, array, exact, nullableString, object, oneOf, string, u16 } from "./validate";
 
 /**
  * Runtime validation of `get_app_info` responses against the generated contract.
@@ -17,75 +18,6 @@ import { CoreApiError } from "./errors";
  * so adding, removing or retyping a field in Rust breaks this file at compile time.
  * At runtime, wrong types, unknown enum values and unexpected fields are rejected.
  */
-
-type JsonObject = Record<string, unknown>;
-
-class ContractViolation extends Error {}
-
-function object(value: unknown, path: string): JsonObject {
-  if (typeof value !== "object" || value === null || Array.isArray(value)) {
-    throw new ContractViolation(`${path} must be an object`);
-  }
-  return value as JsonObject;
-}
-
-function string(source: JsonObject, key: string, path: string): string {
-  const value = source[key];
-  if (typeof value !== "string") {
-    throw new ContractViolation(`${path}.${key} must be a string`);
-  }
-  return value;
-}
-
-function nullableString(source: JsonObject, key: string, path: string): string | null {
-  const value = source[key];
-  if (value === null) {
-    return null;
-  }
-  if (typeof value !== "string") {
-    throw new ContractViolation(`${path}.${key} must be a string or null`);
-  }
-  return value;
-}
-
-function u16(source: JsonObject, key: string, path: string): number {
-  const value = source[key];
-  if (typeof value !== "number" || !Number.isInteger(value) || value < 0 || value > 0xffff) {
-    throw new ContractViolation(`${path}.${key} must be an integer between 0 and 65535`);
-  }
-  return value;
-}
-
-function oneOf<T extends string>(
-  source: JsonObject,
-  key: string,
-  path: string,
-  allowed: Record<T, true>,
-): T {
-  const value = source[key];
-  if (typeof value !== "string" || !Object.hasOwn(allowed, value)) {
-    throw new ContractViolation(`${path}.${key} has an unsupported value`);
-  }
-  return value as T;
-}
-
-function array(source: JsonObject, key: string, path: string): unknown[] {
-  const value = source[key];
-  if (!Array.isArray(value)) {
-    throw new ContractViolation(`${path}.${key} must be an array`);
-  }
-  return value;
-}
-
-/** Mirrors Rust's `deny_unknown_fields`: the source may not carry extra keys. */
-function exact<T extends object>(source: JsonObject, parsed: T, path: string): T {
-  for (const key of Object.keys(source)) {
-    if (!Object.hasOwn(parsed, key)) {
-      throw new ContractViolation(`${path}.${key} is not part of the contract`);
-    }
-  }
-  return parsed;
-}
 
 // Records over generated unions: exhaustive at compile time.
 const BUILD_PROFILES: Record<BuildProfile, true> = { debug: true, release: true };

@@ -309,13 +309,13 @@ fn only_the_input_gate_calls_inject() {
     );
 }
 
-// T-CONTRACT-05: interfaces exist, implementations do not. A future phase that adds one
-// must change this list deliberately (and the advertised capabilities with it).
+// T-CONTRACT-05 (amended in CAP-02A): only the capture contracts have production
+// implementations, and only inside tp-capture (Windows provider; the uninhabited
+// "not implemented" provider for other systems). Every other contract is still
+// interface-only. A phase that adds one must change these lists deliberately.
 #[test]
-fn no_production_platform_implementation_exists_yet() {
-    const NOT_YET_IMPLEMENTED: [&str; 9] = [
-        "CaptureProvider",
-        "CaptureStream",
+fn production_platform_implementations_exist_only_where_allowed() {
+    const NOT_YET_IMPLEMENTED: [&str; 7] = [
         "InputController",
         "VideoEncoder",
         "VideoDecoder",
@@ -324,20 +324,183 @@ fn no_production_platform_implementation_exists_yet() {
         "PermissionManager",
         "DeviceIdentity",
     ];
+    const CAPTURE: [&str; 4] = [
+        "CaptureProvider",
+        "CaptureStream",
+        "CapturePicker",
+        "FrameReadback",
+    ];
+    let implements = |code: &str, name: &str| {
+        code.contains(&format!(" {name} for ")) || code.contains(&format!("::{name} for "))
+    };
+    let mut capture_impls = Vec::new();
     for (path, text) in production_sources() {
+        let display = path.display().to_string();
         for (n, code) in code_lines(&text) {
             let code = code.trim_start();
             if !code.starts_with("impl") {
                 continue;
             }
             for name in NOT_YET_IMPLEMENTED {
-                let pattern = format!(" {name} for ");
-                let pattern_path = format!("::{name} for ");
                 assert!(
-                    !code.contains(&pattern) && !code.contains(&pattern_path),
-                    "{}:{n}: production implementation of {name}",
-                    path.display()
+                    !implements(code, name),
+                    "{display}:{n}: production implementation of {name}"
                 );
+            }
+            for name in CAPTURE {
+                if implements(code, name) {
+                    assert!(
+                        display.contains("crates/tp-capture/src/wgc/")
+                            || display.ends_with("crates/tp-capture/src/unsupported.rs"),
+                        "{display}:{n}: {name} implemented outside tp-capture"
+                    );
+                    capture_impls.push(format!("{name} @ {display}"));
+                }
+            }
+        }
+    }
+    assert!(
+        capture_impls
+            .iter()
+            .any(|i| i.contains("CaptureProvider") && i.contains("/wgc/")),
+        "the Windows provider is missing: {capture_impls:?}"
+    );
+}
+
+/// Lines of production code (comments stripped) that contain `needle`, as `path:line`.
+fn occurrences(needle: &str) -> Vec<String> {
+    let mut found = Vec::new();
+    for (path, text) in production_sources() {
+        for (n, code) in code_lines(&text) {
+            if code.contains(needle) {
+                found.push(format!("{}:{n}", path.display()));
+            }
+        }
+    }
+    found
+}
+
+// T-CAP-RUN-04 (static part): the Windows capture border is never disabled and borderless
+// access is never requested anywhere in production code.
+#[test]
+fn the_capture_border_is_never_disabled() {
+    for needle in [
+        "IsBorderRequired",
+        "Borderless",
+        "GraphicsCaptureAccess",
+        "graphicsCaptureWithoutBorder",
+    ] {
+        assert_eq!(occurrences(needle), Vec::<String>::new(), "{needle} used");
+    }
+}
+
+// Capture sessions are created in exactly one audited place, from the target passed to
+// `start`.
+#[test]
+fn capture_sessions_are_created_in_one_place() {
+    let sessions = occurrences("CreateCaptureSession(");
+    assert_eq!(sessions.len(), 1, "{sessions:?}");
+    assert!(
+        sessions[0].contains("crates/tp-capture/src/wgc/stream.rs"),
+        "{sessions:?}"
+    );
+}
+
+// ADR-007: production targets come only from the system picker. Window targets and
+// programmatic monitor targets exist only in the test-support module; monitor items are
+// otherwise created only to read their names (target.rs).
+#[test]
+fn programmatic_capture_targets_are_test_only() {
+    let windows = occurrences("CreateForWindow(");
+    assert!(
+        windows
+            .iter()
+            .all(|w| w.contains("crates/tp-capture/src/wgc/testing.rs")),
+        "{windows:?}"
+    );
+    let monitors = occurrences("CreateForMonitor(");
+    assert!(
+        monitors
+            .iter()
+            .all(|m| m.contains("crates/tp-capture/src/wgc/testing.rs")
+                || m.contains("crates/tp-capture/src/wgc/target.rs")),
+        "{monitors:?}"
+    );
+    let programmatic = occurrences("WgcTarget::programmatic(");
+    assert!(
+        programmatic
+            .iter()
+            .all(|p| p.contains("crates/tp-capture/src/wgc/testing.rs")),
+        "{programmatic:?}"
+    );
+    let picker_targets = occurrences("WgcTarget::from_picker(");
+    assert_eq!(picker_targets.len(), 1, "{picker_targets:?}");
+    assert!(picker_targets[0].contains("crates/tp-capture/src/wgc/picker.rs"));
+    let module = std::fs::read_to_string(workspace_root().join("crates/tp-capture/src/wgc/mod.rs"))
+        .expect("read wgc/mod.rs");
+    assert!(
+        module.contains("#[cfg(feature = \"test-support\")]\npub mod testing;")
+            || module.contains("#[cfg(feature = \"test-support\")]\r\npub mod testing;"),
+        "the testing module must be gated by test-support"
+    );
+}
+
+// ADR-007: a LocalPreviewGrant is minted in exactly one place, the picker-completion path.
+#[test]
+fn only_the_picker_completion_mints_a_preview_grant() {
+    let mints = occurrences("LocalPreviewGrant::on_picker_selection(");
+    assert_eq!(mints.len(), 1, "{mints:?}");
+    assert!(
+        mints[0].contains("crates/tp-core/src/preview/host.rs"),
+        "{mints:?}"
+    );
+}
+
+// ARCH-00 §3.3 rule 5 / CAP-02A: unsafe code exists only in tp-capture's Windows module,
+// and every unsafe block or function there is preceded by a SAFETY comment.
+#[test]
+fn unsafe_code_is_confined_and_justified() {
+    for (path, text) in production_sources() {
+        let display = path.display().to_string();
+        let lines: Vec<&str> = text.lines().collect();
+        for (n, code) in code_lines(&text) {
+            let has_unsafe = code
+                .split(|c: char| !c.is_ascii_alphanumeric() && c != '_')
+                .any(|word| word == "unsafe");
+            if !has_unsafe {
+                continue;
+            }
+            assert!(
+                display.contains("crates/tp-capture/src/wgc/"),
+                "{display}:{n}: unsafe outside crates/tp-capture/src/wgc"
+            );
+            let start = n.saturating_sub(7);
+            let justified = lines[start..n].iter().any(|l| l.contains("SAFETY"));
+            assert!(justified, "{display}:{n}: unsafe without a SAFETY comment");
+        }
+    }
+}
+
+// CAP-02A: nothing in the capture or preview path writes files (frames are never stored).
+#[test]
+fn the_capture_and_preview_path_writes_no_files() {
+    for (path, text) in production_sources() {
+        let display = path.display().to_string();
+        let in_scope = display.contains("crates/tp-capture/src/")
+            || display.contains("crates/tp-core/src/preview/")
+            || display.contains("apps/desktop/src-tauri/src/");
+        if !in_scope {
+            continue;
+        }
+        for (n, code) in code_lines(&text) {
+            for needle in [
+                "std::fs",
+                "File::create",
+                "OpenOptions",
+                "fs::write",
+                "CreateFileW",
+            ] {
+                assert!(!code.contains(needle), "{display}:{n}: {needle}");
             }
         }
     }
@@ -392,4 +555,14 @@ fn the_app_build_graph_has_no_test_support() {
             "binding generation in the app build: {line}"
         );
     }
+    // CAP-02A: tp-capture uses the windows crate Tauri already uses; no second copy.
+    let windows_versions: BTreeSet<&str> = tree
+        .lines()
+        .filter_map(|l| l.split('|').next())
+        .filter(|p| p.starts_with("windows v"))
+        .collect();
+    assert!(
+        windows_versions.len() <= 1,
+        "several windows crate versions: {windows_versions:?}"
+    );
 }

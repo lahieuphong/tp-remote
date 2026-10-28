@@ -75,6 +75,10 @@ CAP-02 and NET-03 may run in either order after BOOT-02. They do not share owned
 > - BOOT-02 was inserted after BOOT-01. It holds the BOOT-01 scope that the BOOT-01 prompt deferred: the contracts, the state machine, the policy and redaction.
 > - ADR numbers: ADR-003 is the session lifecycle and ADR-004 the platform support policy (U-08). The NET-03 session-security ADR is renumbered **ADR-005**, and the WAN-07 ADR **ADR-006**.
 
+> **Amendment (CAP-02A, 2026-10-28):**
+> - CAP-02 is split. **CAP-02A** is Windows native capture plus a local self-preview (§4a). **CAP-02B** is macOS ScreenCaptureKit plus OS permissions; it needs DEV-M1.
+> - The local preview ships in the normal build behind the Windows picker, not as a dev-only preview. ADR-007 covers its authorization; ADR-005 and ADR-006 stay reserved.
+
 ### 1.3 Hardware and access prerequisites (cross-phase)
 
 | Need | By phase | Status |
@@ -135,6 +139,15 @@ CAP-02 and NET-03 may run in either order after BOOT-02. They do not share owned
 | Non-goals | Any capture, input injection, codec, transport, signaling, PAKE, IPC command, OS permission request, network listener or UI change |
 | Files / modules owned | `crates/tp-contracts/**`, `crates/tp-session/**`, `crates/tp-security/**`, `crates/tp-core/**`, `crates/tp-diagnostics/**`, `crates/tp-protocol/src/error.rs`, `crates/tp-protocol/tests/reserved.rs`, `crates/tp-test-harness/tests/workspace_boundaries.rs`, `apps/desktop/src-tauri/src/lib.rs` (log field name only), `apps/desktop/src-tauri/tests/ipc.rs` (phase assertion only), BOOT-02 docs and ADR-003/004 |
 | Exit gate | BOOT-02 prompt §15. Result: see `docs/reports/BOOT-02-report.md` |
+
+## 4a. CAP-02A — Windows native capture and local preview (executed 2026-10-28)
+
+| Item | Content |
+|---|---|
+| Goal | Real Windows.Graphics.Capture frames shown live in TP Remote, behind a trusted local selection boundary, with real measurements |
+| Scope | `tp-capture::wgc` (picker, monitors, D3D11, stream, readback); capture contract amendment (ADR-007); `tp-core::preview` (machine, grant, host); five Tauri commands; preview UI; `tp-test-harness` real-device tests, `capture-bench`, `preview-soak`, `tp-test-pattern` |
+| Non-goals | Remote streaming, encoding, transport, input, macOS, DXGI comparison (U-11) |
+| Exit gate | CAP-02A prompt §16. Result: see `docs/reports/CAP-02A-report.md` |
 
 ## 4. CAP-02 — Screen capture and OS permissions
 

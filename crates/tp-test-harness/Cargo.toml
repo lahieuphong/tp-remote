@@ -11,8 +11,25 @@ publish.workspace = true
 name = "tp-bindings"
 path = "src/bin/tp-bindings.rs"
 
+[[bin]]
+name = "capture-bench"
+path = "src/bin/capture-bench.rs"
+
+[[bin]]
+name = "tp-test-pattern"
+path = "src/bin/tp-test-pattern.rs"
+
+[[bin]]
+name = "preview-soak"
+path = "src/bin/preview-soak.rs"
+
 [dependencies]
 tp-contracts = { workspace = true, features = ["ts-bindings"] }
+# Programmatic capture targets and the synthetic test-pattern window (CAP-02A).
+tp-capture = { workspace = true, features = ["test-support"] }
+# The local preview host, driven over real capture by preview-soak and preview_windows.rs.
+tp-core = { workspace = true }
+tp-diagnostics = { workspace = true }
 ts-rs = { workspace = true }
 serde_json = { workspace = true }
 

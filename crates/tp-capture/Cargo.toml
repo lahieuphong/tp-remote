@@ -1,14 +1,38 @@
 [package]
 name = "tp-capture"
-description = "TP Remote screen capture providers (foundation only in BOOT-01)."
+description = "TP Remote screen capture providers: Windows.Graphics.Capture (CAP-02A); macOS planned."
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 publish.workspace = true
 
+[features]
+# Test-only: programmatic capture targets (by monitor or window handle) and a synthetic
+# test-pattern window. Never enabled in the desktop app's build graph
+# (crates/tp-test-harness/tests/workspace_boundaries.rs).
+test-support = []
+
 [dependencies]
 tp-contracts = { workspace = true }
+
+[target.'cfg(windows)'.dependencies]
+windows = { workspace = true, features = [
+    "Foundation",
+    "Graphics_Capture",
+    "Graphics_DirectX_Direct3D11",
+    "Win32_Foundation",
+    "Win32_Graphics_Direct3D",
+    "Win32_Graphics_Direct3D11",
+    "Win32_Graphics_Dxgi",
+    "Win32_Graphics_Dxgi_Common",
+    "Win32_Graphics_Gdi",
+    "Win32_System_WinRT_Direct3D11",
+    "Win32_System_WinRT_Graphics_Capture",
+    "Win32_UI_HiDpi",
+    "Win32_UI_Shell",
+    "Win32_UI_WindowsAndMessaging",
+] }
 
 [lints]
 workspace = true

@@ -142,6 +142,13 @@ The following are excluded:
 > - The session lifecycle (§6) is implemented in `tp-session`, with the clarifications in [ADR-003](ADR-003-session-lifecycle.md). These include the `Busy` contradiction between row 4 and the outcome classes, stale-event rules, and timer outcomes.
 > - The §4 contracts exist in `tp-contracts`, as interfaces without production implementations ([BOOT-02-contract-map](BOOT-02-contract-map.md)). The `SessionManager` contract is synchronous (ADR-003 C-10).
 
+> **Status update (CAP-02A, 2026-10-28):**
+> - **Capture:** §4.2 is implemented for Windows with Windows.Graphics.Capture (`tp-capture::wgc`). The contract was amended: picker-produced opaque targets and the `CapturePicker` trait ([ADR-007](ADR-007-local-preview-authorization.md)).
+> - **Local self-preview:** a local-only feature with its own lifecycle and grant. It does not use the §6 session machine and does not change remote authorization.
+> - **IPC (§3.5):** five local-preview commands are added. Frames reach the WebView through Tauri IPC only (no localhost server, §3.5).
+> - **FS-B:** the WGC monitor-capture path is verified on all three DEV-W1 displays, including negative origins. Two findings: GDI and WGC monitor numbering differ, and covered windows deliver no frames.
+> - **U-11 (DXGI fallback):** not decided. The DXGI comparison (FS-B5) was not run in CAP-02A.
+
 ---
 
 ## 3. System architecture

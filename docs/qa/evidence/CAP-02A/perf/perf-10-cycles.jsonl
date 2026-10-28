@@ -1,0 +1,32 @@
+{"cycles":10,"event":"bench.start","pid":42632,"preview":"1280x720","preview_fps":30,"seconds":3,"topmost":true}
+{"capture_fps":54.0,"cycle":1,"event":"bench.tick","frames":55,"pattern_paints":97,"readback_ms_max":2.001,"readbacks":30,"t_s":1.1965001}
+{"capture_fps":53.0,"cycle":1,"event":"bench.tick","frames":108,"pattern_paints":161,"readback_ms_max":2.001,"readbacks":60,"t_s":2.1982792}
+{"adapter":"NVIDIA GeForce RTX 3090","content":"1266x713","cycle":1,"deliveries_after_stop":0,"event":"bench.cycle","first_frame_ms":192.7,"frames":153,"frames_dropped":0,"mean_capture_fps":51.0,"readback_errors":0,"readback_ms_avg":1.33,"readback_ms_max":2.001,"readbacks":84,"stop_ms":1.1}
+{"capture_fps":52.0,"cycle":2,"event":"bench.tick","frames":53,"pattern_paints":299,"readback_ms_max":1.722,"readbacks":30,"t_s":1.1564841}
+{"capture_fps":57.0,"cycle":2,"event":"bench.tick","frames":110,"pattern_paints":363,"readback_ms_max":1.722,"readbacks":60,"t_s":2.1590575}
+{"adapter":"NVIDIA GeForce RTX 3090","content":"1266x713","cycle":2,"deliveries_after_stop":0,"event":"bench.cycle","first_frame_ms":153.6,"frames":157,"frames_dropped":0,"mean_capture_fps":52.3,"readback_errors":0,"readback_ms_avg":1.38,"readback_ms_max":2.122,"readbacks":85,"stop_ms":14.0}
+{"capture_fps":55.0,"cycle":3,"event":"bench.tick","frames":56,"pattern_paints":505,"readback_ms_max":1.764,"readbacks":30,"t_s":1.1550244}
+{"capture_fps":58.0,"cycle":3,"event":"bench.tick","frames":114,"pattern_paints":569,"readback_ms_max":1.764,"readbacks":60,"t_s":2.1570228}
+{"adapter":"NVIDIA GeForce RTX 3090","content":"1266x713","cycle":3,"deliveries_after_stop":0,"event":"bench.cycle","first_frame_ms":153.3,"frames":161,"frames_dropped":0,"mean_capture_fps":53.7,"readback_errors":0,"readback_ms_avg":1.44,"readback_ms_max":2.294,"readbacks":84,"stop_ms":0.8}
+{"capture_fps":58.0,"cycle":4,"event":"bench.tick","frames":58,"pattern_paints":711,"readback_ms_max":1.749,"readbacks":30,"t_s":1.1677061}
+{"capture_fps":55.1,"cycle":4,"event":"bench.tick","frames":114,"pattern_paints":775,"readback_ms_max":1.749,"readbacks":60,"t_s":2.1696771}
+{"adapter":"NVIDIA GeForce RTX 3090","content":"1266x713","cycle":4,"deliveries_after_stop":0,"event":"bench.cycle","first_frame_ms":162.7,"frames":160,"frames_dropped":0,"mean_capture_fps":53.3,"readback_errors":0,"readback_ms_avg":1.52,"readback_ms_max":2.752,"readbacks":85,"stop_ms":1.4}
+{"capture_fps":57.0,"cycle":5,"event":"bench.tick","frames":58,"pattern_paints":916,"readback_ms_max":2.051,"readbacks":30,"t_s":1.1664929}
+{"capture_fps":53.0,"cycle":5,"event":"bench.tick","frames":111,"pattern_paints":980,"readback_ms_max":2.102,"readbacks":60,"t_s":2.1679942}
+{"adapter":"NVIDIA GeForce RTX 3090","content":"1266x713","cycle":5,"deliveries_after_stop":0,"event":"bench.cycle","first_frame_ms":159.1,"frames":156,"frames_dropped":0,"mean_capture_fps":52.0,"readback_errors":0,"readback_ms_avg":1.44,"readback_ms_max":2.126,"readbacks":85,"stop_ms":0.8}
+{"capture_fps":54.0,"cycle":6,"event":"bench.tick","frames":55,"pattern_paints":1121,"readback_ms_max":1.772,"readbacks":30,"t_s":1.1589094}
+{"capture_fps":58.0,"cycle":6,"event":"bench.tick","frames":113,"pattern_paints":1185,"readback_ms_max":1.899,"readbacks":60,"t_s":2.1612317}
+{"adapter":"NVIDIA GeForce RTX 3090","content":"1266x713","cycle":6,"deliveries_after_stop":0,"event":"bench.cycle","first_frame_ms":154.2,"frames":158,"frames_dropped":0,"mean_capture_fps":52.7,"readback_errors":0,"readback_ms_avg":1.36,"readback_ms_max":2.056,"readbacks":85,"stop_ms":1.3}
+{"capture_fps":53.0,"cycle":7,"event":"bench.tick","frames":54,"pattern_paints":1326,"readback_ms_max":2.014,"readbacks":30,"t_s":1.1699814}
+{"capture_fps":55.0,"cycle":7,"event":"bench.tick","frames":109,"pattern_paints":1390,"readback_ms_max":2.202,"readbacks":60,"t_s":2.1704555}
+{"adapter":"NVIDIA GeForce RTX 3090","content":"1266x713","cycle":7,"deliveries_after_stop":0,"event":"bench.cycle","first_frame_ms":167.3,"frames":154,"frames_dropped":0,"mean_capture_fps":51.3,"readback_errors":0,"readback_ms_avg":1.53,"readback_ms_max":2.202,"readbacks":84,"stop_ms":0.7}
+{"capture_fps":48.0,"cycle":8,"event":"bench.tick","frames":49,"pattern_paints":1531,"readback_ms_max":1.85,"readbacks":29,"t_s":1.1640208}
+{"capture_fps":54.0,"cycle":8,"event":"bench.tick","frames":103,"pattern_paints":1595,"readback_ms_max":2.242,"readbacks":59,"t_s":2.1669275}
+{"adapter":"NVIDIA GeForce RTX 3090","content":"1266x713","cycle":8,"deliveries_after_stop":0,"event":"bench.cycle","first_frame_ms":160.8,"frames":149,"frames_dropped":0,"mean_capture_fps":49.7,"readback_errors":0,"readback_ms_avg":1.51,"readback_ms_max":4.805,"readbacks":84,"stop_ms":1.1}
+{"capture_fps":55.0,"cycle":9,"event":"bench.tick","frames":56,"pattern_paints":1736,"readback_ms_max":2.167,"readbacks":30,"t_s":1.1613633}
+{"capture_fps":59.0,"cycle":9,"event":"bench.tick","frames":115,"pattern_paints":1801,"readback_ms_max":2.167,"readbacks":60,"t_s":2.1655967}
+{"adapter":"NVIDIA GeForce RTX 3090","content":"1266x713","cycle":9,"deliveries_after_stop":0,"event":"bench.cycle","first_frame_ms":156.1,"frames":161,"frames_dropped":0,"mean_capture_fps":53.7,"readback_errors":0,"readback_ms_avg":1.59,"readback_ms_max":2.652,"readbacks":85,"stop_ms":0.9}
+{"capture_fps":57.0,"cycle":10,"event":"bench.tick","frames":58,"pattern_paints":1943,"readback_ms_max":1.724,"readbacks":30,"t_s":1.1926915}
+{"capture_fps":58.0,"cycle":10,"event":"bench.tick","frames":116,"pattern_paints":2007,"readback_ms_max":1.724,"readbacks":60,"t_s":2.1935874}
+{"adapter":"NVIDIA GeForce RTX 3090","content":"1266x713","cycle":10,"deliveries_after_stop":0,"event":"bench.cycle","first_frame_ms":188.8,"frames":160,"frames_dropped":0,"mean_capture_fps":53.3,"readback_errors":0,"readback_ms_avg":1.45,"readback_ms_max":2.35,"readbacks":84,"stop_ms":0.7}
+{"event":"bench.end","failures":0}

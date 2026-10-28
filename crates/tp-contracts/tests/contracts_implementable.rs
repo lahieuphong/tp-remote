@@ -2,8 +2,8 @@
 //! through generic code (no trait objects, no async runtime).
 //!
 //! The implementations below are test-only and honest: each one reports
-//! `NotImplemented` and fails with `PlatformUnavailable`. No production implementation of
-//! these contracts exists in BOOT-02.
+//! `NotImplemented` and fails with `PlatformUnavailable`. They are not the real
+//! implementations (CAP-02A adds a Windows `CaptureProvider` in `tp-capture`).
 
 use std::future::Future;
 use std::pin::pin;
@@ -13,8 +13,8 @@ use std::task::{Context, Poll, Waker};
 use tp_contracts::cancel::CancelToken;
 use tp_contracts::capability::{Availability, Scope};
 use tp_contracts::capture::{
-    CaptureCapabilities, CaptureConfig, CaptureEvent, CaptureProvider, CaptureStats, CaptureStream,
-    DisplayLayout, FrameMeta, FrameSink,
+    CaptureCapabilities, CaptureConfig, CaptureEvent, CapturePicker, CaptureProvider, CaptureStats,
+    CaptureStream, DisplayLayout, FrameMeta, FrameSink, PickDone, PickerOwner, TargetInfo,
 };
 use tp_contracts::codec::{
     CodecInfo, EncodeOptions, EncodedFrame, EncoderConfig, VideoDecoder, VideoEncoder,
@@ -46,7 +46,7 @@ fn ready<F: Future>(future: F) -> F::Output {
 }
 
 struct NoCapture;
-struct NoStream;
+struct NoStream(TargetInfo);
 struct NullSink;
 
 impl FrameSink<Vec<u8>> for NullSink {
@@ -55,6 +55,12 @@ impl FrameSink<Vec<u8>> for NullSink {
 }
 
 impl CaptureStream for NoStream {
+    fn target(&self) -> &TargetInfo {
+        &self.0
+    }
+    fn generation(&self) -> u64 {
+        0
+    }
     fn reconfigure(&mut self, _config: CaptureConfig) -> Result<(), CoreError> {
         Err(UNAVAILABLE)
     }
@@ -65,21 +71,34 @@ impl CaptureStream for NoStream {
 
 impl CaptureProvider for NoCapture {
     type Frame = Vec<u8>;
+    type Target = ();
     type Stream = NoStream;
     fn capabilities(&self) -> CaptureCapabilities {
         CaptureCapabilities {
             availability: Availability::NotImplemented,
             max_fps: 0,
             gpu_frames: false,
+            system_picker: false,
         }
     }
     fn displays(&self) -> Result<DisplayLayout, CoreError> {
         Err(UNAVAILABLE)
     }
-    fn start<S>(&self, _config: CaptureConfig, _sink: Arc<S>) -> Result<NoStream, CoreError>
+    fn start<S>(
+        &self,
+        _target: (),
+        _config: CaptureConfig,
+        _sink: Arc<S>,
+    ) -> Result<NoStream, CoreError>
     where
         S: FrameSink<Vec<u8>> + 'static,
     {
+        Err(UNAVAILABLE)
+    }
+}
+
+impl CapturePicker for NoCapture {
+    fn pick(&self, _owner: PickerOwner, _done: PickDone<()>) -> Result<(), CoreError> {
         Err(UNAVAILABLE)
     }
 }
@@ -255,20 +274,19 @@ impl SessionManager for NoSessions {
 }
 
 // Generic consumers, as tp-core will use them.
-fn start_capture<P: CaptureProvider<Frame = Vec<u8>>>(
+fn start_capture<P: CaptureProvider<Frame = Vec<u8>, Target = ()>>(
     provider: &P,
 ) -> Result<P::Stream, CoreError> {
     let config = CaptureConfig {
-        display: tp_contracts::capture::DisplayId(1),
-        output_size: tp_contracts::capture::PixelSize {
-            width: 1280,
-            height: 720,
-        },
         max_fps: 30,
         format: tp_contracts::capture::PixelFormat::Nv12,
         show_cursor: true,
     };
-    provider.start(config, Arc::new(NullSink))
+    provider.start((), config, Arc::new(NullSink))
+}
+
+fn open_picker<P: CapturePicker>(provider: &P) -> Result<(), CoreError> {
+    provider.pick(PickerOwner(0), Box::new(|_outcome| {}))
 }
 
 fn pair<P, E>(_provider: &P, _encoder: &E)
@@ -286,6 +304,19 @@ fn every_contract_is_implementable_and_reports_honestly() {
         Availability::NotImplemented
     );
     assert_eq!(start_capture(&capture).err(), Some(UNAVAILABLE));
+    assert_eq!(open_picker(&capture), Err(UNAVAILABLE));
+    let stream = NoStream(TargetInfo {
+        kind: tp_contracts::capture::TargetKind::Unknown,
+        label: String::new(),
+        size: tp_contracts::capture::PixelSize {
+            width: 0,
+            height: 0,
+        },
+        display: None,
+    });
+    assert_eq!(stream.target().kind.as_str(), "unknown");
+    assert_eq!(stream.generation(), 0);
+    assert!(stream.stop().is_ok());
     pair(&capture, &NoCodec);
 
     let mut input = NoInput;

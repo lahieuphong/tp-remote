@@ -2,7 +2,7 @@
 
 Internal development workspace for **TP Remote**, a planned consent-first, cross-platform remote desktop application (macOS ↔ Windows). The architecture baseline is in [docs/architecture/ARCH-00.md](docs/architecture/ARCH-00.md).
 
-> **Status: BOOT-02 (core contracts, session state machine, security gates).** The app runs on Windows and reports real diagnostics from its Rust core. The engine now has its shared contracts, a deterministic session lifecycle, a default-deny authorization policy and allowlisted logging, all tested at engine level. **No remote-desktop feature exists yet:** no screen capture, remote input, signaling, networking or streaming, and the app advertises no capability. macOS has not been built or tested.
+> **Status: CAP-02A (Windows native capture and local preview).** On Windows, TP Remote can preview your own screen locally: you pick a display or window in the Windows capture picker and see it live in the app. Windows shows its yellow capture border, and nothing is sent, recorded or saved. Capture uses Windows.Graphics.Capture, with real frames verified on the development machine. **No remote-desktop feature exists yet:** no remote viewing, remote input, signaling, networking or streaming, and the app advertises no remote capability. macOS has not been built or tested (CAP-02B).
 
 Private internal development, all rights reserved; see [LICENSE.txt](LICENSE.txt).
 
@@ -22,11 +22,14 @@ tp-remote/
 │   ├── tp-protocol          versioned JSON wire format v1, limits, strict validation
 │   ├── tp-session           8-state session machine, timers, registry (ADR-003)
 │   ├── tp-security          auth/consent proof types, consent grants, default-deny policy
-│   ├── tp-core              app-core: SessionService, InputGate, get_app_info
+│   ├── tp-core              app-core: SessionService, InputGate, local preview host, get_app_info
 │   ├── tp-diagnostics       allowlisted structured logging + secret redaction
-│   ├── tp-capture, tp-input, tp-media,
+│   ├── tp-capture           Windows.Graphics.Capture provider: picker, monitors, D3D11 frames,
+│   │                        preview readback (Windows only; macOS planned in CAP-02B)
+│   ├── tp-input, tp-media,
 │   │   tp-transport, tp-signaling                foundations only (no runtime capability)
-│   └── tp-test-harness      test-only: bindings generator + workspace boundary tests
+│   └── tp-test-harness      test-only: bindings generator, boundary tests, real-device capture
+│                            tests, capture-bench, preview-soak, tp-test-pattern
 ├── tests/fixtures/          JSON fixtures shared by Rust and TypeScript tests
 ├── scripts/                 check runner, license report, Windows smoke tests
 └── docs/                    architecture, ADRs, threat model, QA, roadmap, phase reports
@@ -120,7 +123,7 @@ Installers, code signing and auto-update are intentionally disabled (`bundle.act
 
 1. Install the prerequisites above.
 2. `npm ci`
-3. `npm run check`: expect 9/9 PASS (141 Rust tests, 18 Vitest tests as of BOOT-02).
+3. `npm run check`: expect 9/9 PASS (Rust and Vitest counts for CAP-02A are in [docs/qa/CAP-02A-test-results.md](docs/qa/CAP-02A-test-results.md)).
 4. `npm run build:app` → `target\release\tp-desktop.exe`.
 5. `powershell -NoProfile -File scripts\smoke-windows.ps1 -Exe target\release\tp-desktop.exe -Label repro -Resize`. In `docs\qa\evidence\BOOT-01\windows\repro.summary.json`, expect:
    - `ipcObserved: true`, `cleanExit: true`;
@@ -129,11 +132,28 @@ Installers, code signing and auto-update are intentionally disabled (`bundle.act
 
 The BOOT-01 build's SHA-256 is recorded in the evidence. Byte-for-byte reproducibility of the executable has **not** been verified.
 
-## Known limitations (BOOT-02)
+### Real-device capture tests (Windows, CAP-02A)
 
-- No remote-desktop functionality of any kind. The UI says so explicitly, and `platform_capabilities()` advertises nothing.
+These tests open a synthetic test-pattern window and capture it, or capture each monitor for about a second (metadata only). They are `#[ignore]` and run only when asked:
+
+```powershell
+cargo test -p tp-test-harness --test capture_windows -- --ignored --test-threads=1 --nocapture
+cargo test -p tp-test-harness --test preview_windows -- --ignored --test-threads=1 --nocapture
+cargo build --release -p tp-test-harness --bins
+powershell -NoProfile -File scripts\capture-bench-windows.ps1 -Label bench -BenchArgs "--seconds 60 --x 120 --y 120 --width 1280 --height 720 --topmost --preview 1280x720"
+powershell -NoProfile -File scripts\capture-qa-windows.ps1 -Label manual-session -DurationSec 1800   # a person uses the picker
+```
+
+Keep the test-pattern window uncovered. Windows delivered no frames for a covered window, and intermittently for windows on the secondary displays of the development machine ([performance report](docs/qa/CAP-02A-performance.md)).
+
+## Known limitations (CAP-02A)
+
+- No remote-desktop functionality of any kind. The UI says so explicitly, and `platform_capabilities()` advertises nothing. The local preview is local only.
+- The local preview works on Windows only. The app-level picker flow with a person was **not** fully verified in CAP-02A; real frames were verified at provider and host level ([CAP-02A test results](docs/qa/CAP-02A-test-results.md)).
+- A previewed window that is covered by another window stops updating (Windows delivers no frames for it). Displays are not affected.
+- Each capture run leaves about 3 process handles that Windows does not return until the app exits ([security review](docs/security/CAP-02A-security-review.md) F-CAP-4).
 - Verified on Windows 11 x64 at 100% display scaling only. Other scaling factors and macOS are untested. The OS support policy (U-08) is provisional ([ADR-004](docs/architecture/ADR-004-platform-support.md)).
-- The only IPC command is `get_app_info`. The session lifecycle and authorization policy exist in the engine but are not exposed over IPC.
+- IPC commands: `get_app_info` and five local-preview commands. None of them can name a capture target. The session lifecycle and remote authorization policy are not exposed over IPC.
 - There is no production source of authentication (PAKE) or local consent yet, by design ([BOOT-02 security review](docs/security/BOOT-02-security-review.md) §3).
 - Policy and gate tests run against mocks: they prove the logic, not OS-level enforcement.
 - Capture, input, codecs and transport are planned for later phases ([docs/roadmap/PROMPT-PLAN.md](docs/roadmap/PROMPT-PLAN.md)).
@@ -142,7 +162,7 @@ The BOOT-01 build's SHA-256 is recorded in the evidence. Byte-for-byte reproduci
 
 ## Documentation
 
-- Architecture: [ARCH-00](docs/architecture/ARCH-00.md), [ADR-001](docs/architecture/ADR-001-stack.md), [ADR-002](docs/architecture/ADR-002-media-transport.md), [ADR-003 session lifecycle](docs/architecture/ADR-003-session-lifecycle.md), [ADR-004 platform support](docs/architecture/ADR-004-platform-support.md), [BOOT-01 dependency map](docs/architecture/BOOT-01-dependency-map.md), [BOOT-02 contract map](docs/architecture/BOOT-02-contract-map.md)
-- Security: [threat model](docs/security/THREAT-MODEL.md), [BOOT-02 security review](docs/security/BOOT-02-security-review.md)
-- QA: [strategy](docs/qa/TEST-STRATEGY.md), [matrix](docs/qa/TEST-MATRIX.md), [BOOT-01 results](docs/qa/BOOT-01-test-results.md), [BOOT-01 environment](docs/qa/BOOT-01-environment.md), [BOOT-02 results](docs/qa/BOOT-02-test-results.md)
-- Reports: [ARCH-00](docs/reports/ARCH-00-report.md), [BOOT-01](docs/reports/BOOT-01-report.md), [BOOT-02](docs/reports/BOOT-02-report.md)
+- Architecture: [ARCH-00](docs/architecture/ARCH-00.md), [ADR-001](docs/architecture/ADR-001-stack.md), [ADR-002](docs/architecture/ADR-002-media-transport.md), [ADR-003 session lifecycle](docs/architecture/ADR-003-session-lifecycle.md), [ADR-004 platform support](docs/architecture/ADR-004-platform-support.md), [ADR-007 local preview authorization](docs/architecture/ADR-007-local-preview-authorization.md), [BOOT-01 dependency map](docs/architecture/BOOT-01-dependency-map.md), [BOOT-02 contract map](docs/architecture/BOOT-02-contract-map.md), [CAP-02A capture pipeline](docs/architecture/CAP-02A-capture-pipeline.md)
+- Security: [threat model](docs/security/THREAT-MODEL.md), [BOOT-02 security review](docs/security/BOOT-02-security-review.md), [CAP-02A security review](docs/security/CAP-02A-security-review.md)
+- QA: [strategy](docs/qa/TEST-STRATEGY.md), [matrix](docs/qa/TEST-MATRIX.md), [BOOT-01 results](docs/qa/BOOT-01-test-results.md), [BOOT-01 environment](docs/qa/BOOT-01-environment.md), [BOOT-02 results](docs/qa/BOOT-02-test-results.md), [CAP-02A results](docs/qa/CAP-02A-test-results.md), [CAP-02A performance](docs/qa/CAP-02A-performance.md)
+- Reports: [ARCH-00](docs/reports/ARCH-00-report.md), [BOOT-01](docs/reports/BOOT-01-report.md), [BOOT-02](docs/reports/BOOT-02-report.md), [CAP-02A](docs/reports/CAP-02A-report.md)

@@ -9,7 +9,9 @@ use std::collections::BTreeMap;
 use std::path::Path;
 
 use tp_contracts::ipc::{
-    AppInfo, BuildProfile, EngineModuleStatus, IpcError, IpcErrorCode, PlatformInfo,
+    AppInfo, BuildProfile, CaptureAvailability, CaptureDisplay, CaptureDisplays,
+    EngineModuleStatus, IpcError, IpcErrorCode, LocalPreviewState, LocalPreviewStatus,
+    PlatformInfo, PreviewError, PreviewOutcome, PreviewStats, PreviewTarget, PreviewTargetKind,
     ProtocolSupport, RemoteFeatures, ShellInfo,
 };
 use tp_contracts::module::ModuleState;
@@ -52,6 +54,17 @@ pub fn generate() -> Result<Vec<GeneratedFile>, String> {
         type_file::<ModuleState>(&cfg)?,
         type_file::<IpcError>(&cfg)?,
         type_file::<IpcErrorCode>(&cfg)?,
+        // CAP-02A local self-preview.
+        type_file::<CaptureDisplays>(&cfg)?,
+        type_file::<CaptureDisplay>(&cfg)?,
+        type_file::<CaptureAvailability>(&cfg)?,
+        type_file::<LocalPreviewStatus>(&cfg)?,
+        type_file::<LocalPreviewState>(&cfg)?,
+        type_file::<PreviewTarget>(&cfg)?,
+        type_file::<PreviewTargetKind>(&cfg)?,
+        type_file::<PreviewStats>(&cfg)?,
+        type_file::<PreviewOutcome>(&cfg)?,
+        type_file::<PreviewError>(&cfg)?,
     ];
     files.sort_by(|a, b| a.name.cmp(&b.name));
 

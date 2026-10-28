@@ -66,7 +66,7 @@ describe("AppInfo contract (Rust ↔ TypeScript)", () => {
 
   it("uses only bindings generated from Rust", () => {
     const files = Object.entries(bindingSources);
-    expect(files.length).toBe(11);
+    expect(files.length).toBe(21); // 11 in BOOT-01, plus 10 CAP-02A preview types
     for (const [path, source] of files) {
       const header = path.endsWith("/index.ts") ? INDEX_HEADER : TS_RS_HEADER;
       expect(source.startsWith(header), path).toBe(true);

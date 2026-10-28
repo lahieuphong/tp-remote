@@ -3,22 +3,39 @@ import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import validFixture from "../../../../tests/fixtures/ipc/app-info.valid.json";
+import { previewDefault } from "../test/previewFixtures";
 import { App } from "./App";
 
-/** Records every IPC command the UI sends. */
+/**
+ * Records every IPC command the UI sends. `handler` answers get_app_info; the CAP-02A
+ * preview commands get their ready-state fixtures (LocalPreviewCard.test.tsx covers them).
+ */
 function recordCommands(handler: (cmd: string) => unknown): string[] {
   const calls: string[] = [];
   mockIPC((cmd) => {
     calls.push(cmd);
-    return handler(cmd);
+    return cmd === "get_app_info" ? handler(cmd) : previewDefault(cmd);
   });
   return calls;
+}
+
+/** Commands other than the preview card's own (start, stop and frames need a click). */
+const PREVIEW_MOUNT = new Set(["get_local_preview_status", "get_capture_displays"]);
+
+function appInfoCalls(calls: string[]): string[] {
+  expect(calls.filter((c) => c !== "get_app_info" && !PREVIEW_MOUNT.has(c))).toEqual([]);
+  return calls.filter((c) => c === "get_app_info");
 }
 
 /** Tauri rejects failed commands with the serialized error value, not an Error. */
 function tauriRejection(value: unknown): Promise<never> {
   // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors -- reproduces Tauri's behaviour
   return Promise.reject(value);
+}
+
+/** The core status card. Since CAP-02A the preview card shows its own Ready badge too. */
+function coreStatus(): HTMLElement {
+  return screen.getByRole("status");
 }
 
 function statusLabel(): string {
@@ -32,7 +49,7 @@ describe("App: native core status", () => {
 
     expect(statusLabel()).toBe("Loading");
     expect(screen.getByRole("status").dataset.status).toBe("loading");
-    expect(screen.queryByText("Ready")).toBeNull();
+    expect(within(coreStatus()).queryByText("Ready")).toBeNull();
     expect(screen.queryByTestId("diagnostics")).toBeNull();
     expect(screen.queryByTestId("engine-modules")).toBeNull();
   });
@@ -41,7 +58,7 @@ describe("App: native core status", () => {
     const calls = recordCommands(() => validFixture);
     render(<App />);
 
-    expect(await screen.findByText("Ready")).toBeDefined();
+    expect(await within(coreStatus()).findByText("Ready")).toBeDefined();
     const diagnostics = screen.getByTestId("diagnostics");
     expect(within(diagnostics).getByText("0.1.0")).toBeDefined();
     expect(within(diagnostics).getByText("windows (windows)")).toBeDefined();
@@ -52,7 +69,7 @@ describe("App: native core status", () => {
     expect(within(modules).getByText("tp-capture")).toBeDefined();
     expect(within(modules).getByText("CAP-02")).toBeDefined();
     expect(screen.getByText("reported by Rust core: remoteFeatures = notImplemented")).toBeDefined();
-    expect(calls).toEqual(["get_app_info"]);
+    expect(appInfoCalls(calls)).toEqual(["get_app_info"]);
   });
 
   it("shows Failed with the error from Rust when the command rejects", async () => {
@@ -61,12 +78,12 @@ describe("App: native core status", () => {
     );
     render(<App />);
 
-    expect(await screen.findByText("Failed")).toBeDefined();
+    expect(await within(coreStatus()).findByText("Failed")).toBeDefined();
     expect(screen.getByTestId("core-error-message").textContent).toBe(
       "get_app_info failed: fault injected for testing",
     );
     expect(screen.getByText("code: injectedFault")).toBeDefined();
-    expect(screen.queryByText("Ready")).toBeNull();
+    expect(within(coreStatus()).queryByText("Ready")).toBeNull();
     expect(screen.queryByTestId("diagnostics")).toBeNull();
   });
 
@@ -74,7 +91,7 @@ describe("App: native core status", () => {
     recordCommands(() => tauriRejection("Command get_app_info not allowed by ACL"));
     render(<App />);
 
-    expect(await screen.findByText("Failed")).toBeDefined();
+    expect(await within(coreStatus()).findByText("Failed")).toBeDefined();
     expect(screen.getByText("code: ipcRejected")).toBeDefined();
   });
 
@@ -82,9 +99,9 @@ describe("App: native core status", () => {
     recordCommands(() => ({ ...validFixture, protocol: { current: "1", minSupported: 1, maxSupported: 1 } }));
     render(<App />);
 
-    expect(await screen.findByText("Failed")).toBeDefined();
+    expect(await within(coreStatus()).findByText("Failed")).toBeDefined();
     expect(screen.getByText("code: invalidResponse")).toBeDefined();
-    expect(screen.queryByText("Ready")).toBeNull();
+    expect(within(coreStatus()).queryByText("Ready")).toBeNull();
     expect(screen.queryByTestId("diagnostics")).toBeNull();
   });
 
@@ -98,13 +115,13 @@ describe("App: native core status", () => {
     });
     render(<App />);
 
-    expect(await screen.findByText("Failed")).toBeDefined();
+    expect(await within(coreStatus()).findByText("Failed")).toBeDefined();
     act(() => {
       fireEvent.click(screen.getByRole("button", { name: "Retry" }));
     });
     expect(statusLabel()).toBe("Loading");
-    expect(await screen.findByText("Ready")).toBeDefined();
-    expect(calls).toEqual(["get_app_info", "get_app_info"]);
+    expect(await within(coreStatus()).findByText("Ready")).toBeDefined();
+    expect(appInfoCalls(calls)).toEqual(["get_app_info", "get_app_info"]);
   });
 
   it("always states that remote features are not implemented", () => {

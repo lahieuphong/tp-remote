@@ -1,7 +1,14 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "main-window",
-  "description": "BOOT-01: the main window may call get_app_info and nothing else. No core, shell, fs, http or event permissions are granted.",
+  "description": "BOOT-01: the main window may call get_app_info. CAP-02A (ADR-007): it may also use the local self-preview commands, which cannot name a capture target; capture starts only from the Windows picker. No core, shell, fs, http or event permissions are granted.",
   "windows": ["main"],
-  "permissions": ["allow-get-app-info"]
+  "permissions": [
+    "allow-get-app-info",
+    "allow-get-capture-displays",
+    "allow-get-local-preview-status",
+    "allow-start-local-preview",
+    "allow-stop-local-preview",
+    "allow-get-local-preview-frame"
+  ]
 }

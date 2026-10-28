@@ -1,0 +1,28 @@
+{
+    "availability":  "available",
+    "state":  "capturing",
+    "generation":  3,
+    "target":  {
+                   "kind":  "display",
+                   "label":  "Display 2",
+                   "width":  1920,
+                   "height":  1080,
+                   "displayIndex":  0
+               },
+    "stats":  {
+                  "capturedFrames":  -1,
+                  "previewedFrames":  900,
+                  "skippedFrames":  12,
+                  "droppedFrames":  0,
+                  "captureFps":  59.9,
+                  "previewFps":  30.1,
+                  "elapsedMs":  30000,
+                  "firstFrameMs":  132,
+                  "frameWidth":  1920,
+                  "frameHeight":  1080,
+                  "previewWidth":  1280,
+                  "previewHeight":  720
+              },
+    "lastOutcome":  null,
+    "error":  null
+}

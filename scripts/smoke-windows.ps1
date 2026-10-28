@@ -183,6 +183,12 @@ if ($windowReady) {
   $result.tcpListeners = @(Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue |
       Where-Object { $treeIds -contains $_.OwningProcess } |
       ForEach-Object { "$($_.LocalAddress):$($_.LocalPort) pid=$($_.OwningProcess)" })
+  # CAP-02A: every TCP connection of the tree (any state), to tell listeners from
+  # outbound or loopback connections made by WebView2's own processes.
+  $names = @{}; foreach ($t in $tree) { $names[[int]$t.ProcessId] = $t.Name }
+  $result.tcpAll = @(Get-NetTCPConnection -ErrorAction SilentlyContinue |
+      Where-Object { $treeIds -contains $_.OwningProcess } |
+      ForEach-Object { "$($_.State) $($_.LocalAddress):$($_.LocalPort) -> $($_.RemoteAddress):$($_.RemotePort) $($names[[int]$_.OwningProcess])#$($_.OwningProcess)" })
   $result.udpEndpoints = @(Get-NetUDPEndpoint -ErrorAction SilentlyContinue |
       Where-Object { $treeIds -contains $_.OwningProcess } |
       ForEach-Object { "$($_.LocalAddress):$($_.LocalPort) pid=$($_.OwningProcess)" })

@@ -1,8 +1,16 @@
 fn main() {
     // Declaring the app's commands makes Tauri generate `allow-<command>` permissions and
     // enforce them: a command is reachable from the UI only if a capability grants it.
-    let mut attributes = tauri_build::Attributes::new()
-        .app_manifest(tauri_build::AppManifest::new().commands(&["get_app_info"]));
+    let mut attributes =
+        tauri_build::Attributes::new().app_manifest(tauri_build::AppManifest::new().commands(&[
+            "get_app_info",
+            // CAP-02A local self-preview (ADR-007).
+            "get_capture_displays",
+            "get_local_preview_status",
+            "start_local_preview",
+            "stop_local_preview",
+            "get_local_preview_frame",
+        ]));
 
     // tauri-build embeds the Windows app manifest (Common Controls v6) into the binary only.
     // Test executables that link Tauri then fail to start with STATUS_ENTRYPOINT_NOT_FOUND,

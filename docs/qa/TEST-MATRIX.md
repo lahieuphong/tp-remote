@@ -191,7 +191,7 @@
 | Phase | Gate tests (minimum) |
 |---|---|
 | BOOT-01 | T-STA-01 … T-STA-10 (Windows; T-STA-04/07 macOS half may be BLOCKED), T-UNI-01 … T-UNI-06, T-UNI-14, T-UNI-16, T-UNI-18, T-UNI-21 (skeleton), T-UNI-22, T-INT-01, T-INT-10, T-INT-13, T-UI-01 (skeleton) |
-| CAP-02 | T-INT-02, T-DEV-01 … T-DEV-06, T-SEC-01, T-SEC-18, T-UNI-17 (capture part), T-REL-07 (dev part) |
+| CAP-02 | T-INT-02, T-DEV-01 … T-DEV-06, T-SEC-01, T-SEC-18, T-UNI-17 (capture part), T-REL-07 (dev part). Split in CAP-02A (Windows, see §14) and CAP-02B (macOS) |
 | NET-03 | T-UNI-15, T-UNI-19, T-UNI-20, T-INT-05 … T-INT-09, T-INT-11, T-INT-12, T-SEC-03, T-SEC-04, T-SEC-08 … T-SEC-14, T-SEC-16, T-SEC-17, T-SEC-19, T-SEC-21, T-SEC-22, T-NWK-01, T-NWK-03 … T-NWK-08, T-PRF-06, T-PRF-08 (headless), T-UI-02, T-UI-03, T-DEV-17 (basic) |
 | VID-04 | T-INT-03, T-INT-04, T-NWK-03/04 (video), T-NWK-12, T-PRF-01, T-PRF-02, T-PRF-04, T-PRF-05, T-PRF-09, T-PRF-10, T-SEC-15 |
 | CTRL-05 | T-UNI-07 … T-UNI-13, T-UNI-17, T-DEV-07 … T-DEV-10, T-DEV-16, T-SEC-02, T-SEC-05, T-SEC-06, T-SEC-07, T-SEC-20, T-PRF-03 |
@@ -251,3 +251,46 @@ Status: all PASS on DEV-W1 at engine level (see [BOOT-02-test-results](BOOT-02-t
 | T-CONTRACT-04 | T-INT-10 | T-CONTRACT-06 | T-UNI-29 |
 
 **BOOT-02 gate list:** T-STA-01 … 04, 07, 08, 09, 10; T-UNI-01 … 06, 14 … 18, 23 … 29; T-INT-10; the BOOT-01 Windows runtime checks re-run.
+
+## 14. CAP-02A additions (new canonical IDs)
+
+Results: [CAP-02A-test-results](CAP-02A-test-results.md).
+
+| ID | Test | Phase | Preconditions | Device / OS | Steps / command | Expected result | Evidence | P / F / B |
+|---|---|---|---|---|---|---|---|---|
+| T-STA-11 | Capture and preview static guards | CAP-02A | — | ANY | `cargo test -p tp-test-harness --test workspace_boundaries` | The border is never disabled; one capture-session site; programmatic targets only in `testing.rs`; one grant mint site; `unsafe` only in `tp-capture::wgc`, each with SAFETY; no file APIs in the capture/preview/shell paths; capture contracts implemented only in `tp-capture`; one `windows` version and no `test-support` in the app graph | test log + negative controls | P / F |
+| T-UNI-30 | Local preview machine exploration | CAP-02A | — | ANY | `cargo test -p tp-core --test preview_machine` | Invariants I1–I6 hold on every edge of every reachable configuration; all 8 states reached | test log (configurations, edges) | P / F |
+| T-UNI-31 | Local preview authorization and lifecycle (test-double platform) | CAP-02A | Fake picker/provider | ANY | `cargo test -p tp-core --test preview`; `cargo test -p tp-core --doc` | No capture without selection; cancel captures nothing; stale selections released; stop revokes; grant never authorizes ViewScreen/ControlInput; grant not Clone, not convertible, not forgeable; logs free of labels and pixels | test log | P / F (engine level) |
+| T-UNI-32 | Preview IPC contract and frame header | CAP-02A | Shared fixtures | ANY | `cargo test -p tp-contracts --test preview_fixtures`; Vitest `localPreview.contract.test.ts` | Rust serializes the fixtures exactly; TypeScript accepts them unchanged; both reject the same invalid fixtures; header bytes identical | test logs | P / F |
+| T-UNI-33 | Capture helpers | CAP-02A | — | Windows | `cargo test -p tp-capture` | Scaler (aspect, area mean, swizzle, bounds), device-name and label sanitisation, epochs, WGC name matching, picker owner checks | test log | P / F |
+| T-INT-14 | Preview commands through the real ACL (mock runtime) | CAP-02A | — | Windows | `cargo test -p tp-desktop` | Allowed from `main`/local origin; denied to other windows and remote origins; invalid arguments rejected; start with a fabricated handle opens no picker (`forbidden`); capture-shaped unknown commands rejected | test log | P / F (mock runtime) |
+| T-UI-06 | Local preview card | CAP-02A | Mocked IPC | ANY | `npm run test` | States, Start/Stop, picker hint, capture FPS vs preview FPS labelled apart, "No capture is active", errors with recovery, display list | Vitest log | P / F |
+| T-DEV-18 | WGC provider on the device | CAP-02A | Synthetic window (topmost); monitor capture approved | W1 | `cargo test -p tp-test-harness --test capture_windows -- --ignored --test-threads=1` | Support detected; 3 monitors with negative origins; each monitor delivers frames of its own size and is matched to its display; real pattern pixels; contiguous `seq`, monotonic OS timestamps; resize; target closed; closed target fails cleanly; 10 cycles; nothing delivered after stop | test log | P / F |
+| T-DEV-19 | Preview host over real capture | CAP-02A | `WindowPickerForTests` (test-only) | W1 | `cargo test -p tp-test-harness --test preview_windows -- --ignored`; `preview-soak --seconds 1800` | Real frames reach the slot with a valid header and pattern pixels; stop revokes; resize followed; close → targetClosed; 10 cycles; 30 min without failure | test log + soak JSONL + process CSV | P / F (host level) |
+| T-DEV-20 | App runtime regression (CAP-02A build) | CAP-02A | Release build | W1 | `scripts/smoke-windows.ps1 -EvidenceDir docs\qa\evidence\CAP-02A\windows` | WIN-BOOT-01…08 still hold; no TCP listener / UDP endpoint; Medium integrity; clean exit; restart works | summary JSON | P / F |
+| T-DEV-21 | App-level picker flow with a person | CAP-02A | Operator at DEV-W1 | W1 | `scripts/capture-qa-windows.ps1`; operator selects in the Windows picker | Picker appears; cancel captures nothing; selection → live preview; yellow border; stop; 10 cycles; 30 min; close during capture; all corroborated by the app's log and process state | log + samples CSV + screenshots of TP Remote's window (test pattern only) | P / F / NOT RUN |
+| T-PRF-11 | Capture bench (synthetic window) | CAP-02A | Topmost synthetic window | W1 | `scripts/capture-bench-windows.ps1` (720p window 60 s; 1080p → 720p 60 s; 10, 30 and 100 cycles) | Recorded: first-frame time, capture FPS from OS timestamps, readback cost, stop time, CPU and memory from outside, handles over cycles | JSONL + CSV | P: recorded |
+
+## 15. Prompt alias IDs (CAP-02A) → canonical IDs
+
+| Alias | Canonical | Alias | Canonical |
+|---|---|---|---|
+| T-CAP-WIN-01 | T-DEV-18 | T-CAP-SEC-01 | T-UNI-31, T-INT-14 |
+| T-CAP-WIN-02, -03, -04 | T-DEV-01 (geometry part), T-DEV-18 | T-CAP-SEC-02 | T-UNI-31, T-DEV-21 (cancel step) |
+| T-CAP-WIN-05, -06, -07 | T-DEV-18, T-DEV-01 (per-monitor frames) | T-CAP-SEC-03, -04 | T-UNI-31 |
+| T-CAP-WIN-08 | T-DEV-18, T-DEV-19 (window resize; display-resolution part of T-DEV-02 NOT RUN) | T-CAP-SEC-05, -06 | T-UNI-31, T-DEV-19 |
+| T-CAP-WIN-09 | T-DEV-18, T-DEV-19 | T-CAP-SEC-07, -08 | T-INT-14 |
+| T-CAP-WIN-10 | T-DEV-18 (closed target), T-UNI-31 (device loss, engine level) | T-CAP-SEC-09 | T-UNI-31, T-DEV-19 |
+| T-CAP-RUN-01 … -09 | T-DEV-21 (substitutes at host level: T-DEV-19) | T-CAP-SEC-10 | T-DEV-20 |
+| T-CAP-RUN-10 | T-DEV-20, T-INT-02 | CAP-PERF-01 … -10 | T-PRF-11, T-INT-02, T-PRF-04 |
+
+**Existing IDs touched by CAP-02A:**
+- T-INT-02 (real capture lifecycle × 10): run with the bench and the host. See the results for the handle criterion.
+- T-DEV-01: monitor frames and geometry only. A 600 s run per display was not done (window bench instead).
+- T-DEV-02 display-resolution and scale changes: NOT RUN (changing user display settings is not allowed without approval).
+- T-DEV-03 secure desktop: NOT RUN.
+- T-SEC-18: re-checked by T-DEV-20.
+- T-SEC-01: not applicable on Windows (no permission prompt); macOS half CAP-02B.
+- T-UNI-27: amended (capture implemented).
+
+**CAP-02A gate list:** T-STA-11; T-UNI-30 … 33; T-INT-14; T-UI-06; T-DEV-18 … 21; T-PRF-11; T-INT-02; the BOOT-01 and BOOT-02 regression suites.

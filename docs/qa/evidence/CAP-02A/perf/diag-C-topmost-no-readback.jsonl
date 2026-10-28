@@ -1,0 +1,22 @@
+{"cycles":1,"event":"bench.start","pid":1844,"preview":null,"preview_fps":30,"seconds":20,"topmost":true}
+{"capture_fps":50.0,"cycle":1,"event":"bench.tick","frames":51,"pattern_paints":96,"readback_ms_max":0.0,"readbacks":0,"t_s":1.1937584}
+{"capture_fps":56.0,"cycle":1,"event":"bench.tick","frames":107,"pattern_paints":161,"readback_ms_max":0.0,"readbacks":0,"t_s":2.2039307}
+{"capture_fps":58.0,"cycle":1,"event":"bench.tick","frames":166,"pattern_paints":226,"readback_ms_max":0.0,"readbacks":0,"t_s":3.2129842}
+{"capture_fps":56.0,"cycle":1,"event":"bench.tick","frames":222,"pattern_paints":288,"readback_ms_max":0.0,"readbacks":0,"t_s":4.2155604}
+{"capture_fps":55.0,"cycle":1,"event":"bench.tick","frames":277,"pattern_paints":353,"readback_ms_max":0.0,"readbacks":0,"t_s":5.2183905}
+{"capture_fps":58.0,"cycle":1,"event":"bench.tick","frames":335,"pattern_paints":417,"readback_ms_max":0.0,"readbacks":0,"t_s":6.2204956}
+{"capture_fps":53.0,"cycle":1,"event":"bench.tick","frames":388,"pattern_paints":481,"readback_ms_max":0.0,"readbacks":0,"t_s":7.2219935}
+{"capture_fps":56.1,"cycle":1,"event":"bench.tick","frames":445,"pattern_paints":545,"readback_ms_max":0.0,"readbacks":0,"t_s":8.223025}
+{"capture_fps":54.0,"cycle":1,"event":"bench.tick","frames":499,"pattern_paints":609,"readback_ms_max":0.0,"readbacks":0,"t_s":9.2253113}
+{"capture_fps":53.0,"cycle":1,"event":"bench.tick","frames":552,"pattern_paints":674,"readback_ms_max":0.0,"readbacks":0,"t_s":10.2255812}
+{"capture_fps":58.0,"cycle":1,"event":"bench.tick","frames":610,"pattern_paints":738,"readback_ms_max":0.0,"readbacks":0,"t_s":11.2265791}
+{"capture_fps":55.0,"cycle":1,"event":"bench.tick","frames":665,"pattern_paints":801,"readback_ms_max":0.0,"readbacks":0,"t_s":12.2292833}
+{"capture_fps":53.0,"cycle":1,"event":"bench.tick","frames":718,"pattern_paints":866,"readback_ms_max":0.0,"readbacks":0,"t_s":13.2316208}
+{"capture_fps":60.0,"cycle":1,"event":"bench.tick","frames":778,"pattern_paints":930,"readback_ms_max":0.0,"readbacks":0,"t_s":14.2340942}
+{"capture_fps":52.0,"cycle":1,"event":"bench.tick","frames":830,"pattern_paints":994,"readback_ms_max":0.0,"readbacks":0,"t_s":15.2360701}
+{"capture_fps":56.0,"cycle":1,"event":"bench.tick","frames":886,"pattern_paints":1058,"readback_ms_max":0.0,"readbacks":0,"t_s":16.2380383}
+{"capture_fps":53.1,"cycle":1,"event":"bench.tick","frames":940,"pattern_paints":1122,"readback_ms_max":0.0,"readbacks":0,"t_s":17.2404628}
+{"capture_fps":47.0,"cycle":1,"event":"bench.tick","frames":987,"pattern_paints":1187,"readback_ms_max":0.0,"readbacks":0,"t_s":18.2413309}
+{"capture_fps":57.0,"cycle":1,"event":"bench.tick","frames":1043,"pattern_paints":1251,"readback_ms_max":0.0,"readbacks":0,"t_s":19.2436892}
+{"adapter":"NVIDIA GeForce RTX 3090","content":"1266x713","cycle":1,"deliveries_after_stop":0,"event":"bench.cycle","first_frame_ms":191.0,"frames":1084,"frames_dropped":0,"mean_capture_fps":54.2,"readback_errors":0,"readback_ms_avg":0.0,"readback_ms_max":0.0,"readbacks":0,"stop_ms":2.2}
+{"event":"bench.end","failures":0}

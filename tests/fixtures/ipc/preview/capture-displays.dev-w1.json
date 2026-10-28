@@ -1,0 +1,8 @@
+{
+  "epoch": 1,
+  "displays": [
+    { "index": 0, "name": "DISPLAY1", "x": -1920, "y": 71, "width": 1920, "height": 1080, "scalePercent": 100, "refreshHz": 60, "primary": false },
+    { "index": 1, "name": "DISPLAY2", "x": -3840, "y": 71, "width": 1920, "height": 1080, "scalePercent": 100, "refreshHz": 60, "primary": false },
+    { "index": 2, "name": "DISPLAY3", "x": 0, "y": 0, "width": 1920, "height": 1080, "scalePercent": null, "refreshHz": null, "primary": true }
+  ]
+}

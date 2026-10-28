@@ -1,0 +1,12 @@
+﻿# CAP-02A diagnostic (temporary test crates/tp-test-harness/tests/capture_diag.rs, removed after this run)
+# Purpose: WGC monitor names vs GDI device names; item size when minimized/closed; Closed event.
+gdi=DISPLAY1 x=-1920 y=71 primary=false wgc_name=Ok("Display 2")
+gdi=DISPLAY2 x=-3840 y=71 primary=false wgc_name=Ok("Display 1")
+gdi=DISPLAY3 x=0 y=0 primary=true wgc_name=Ok("Display 3")
+open: item size=PixelSize { width: 626, height: 473 }
+minimized: item size=PixelSize { width: 146, height: 28 } frames=6
+restored: item size=PixelSize { width: 626, height: 473 } frames=45 target=PixelSize { width: 626, height: 473 }
+closed: item size=PixelSize { width: 0, height: 0 }
+t=0.8s frames=45 (+0) events=[]
+t=1.3s frames=45 (+0) events=[]
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.34s

@@ -1,0 +1,25 @@
+{
+  "availability": "available",
+  "state": "failed",
+  "generation": 4,
+  "target": null,
+  "stats": {
+    "capturedFrames": 0,
+    "previewedFrames": 0,
+    "skippedFrames": 0,
+    "droppedFrames": 0,
+    "captureFps": 0.0,
+    "previewFps": 0.0,
+    "elapsedMs": 0,
+    "firstFrameMs": null,
+    "frameWidth": 0,
+    "frameHeight": 0,
+    "previewWidth": 0,
+    "previewHeight": 0
+  },
+  "lastOutcome": "deviceLost",
+  "error": {
+    "message": "The graphics device was reset, so capture stopped.",
+    "recovery": "Start the preview again."
+  }
+}

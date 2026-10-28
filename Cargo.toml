@@ -46,6 +46,9 @@ thiserror = "2.0.21"
 ts-rs = "12.0.1"
 tauri = "2.12.5"
 tauri-build = "2.7.4"
+# Microsoft windows-rs. CAP-02A (approved 2026-10-28): the version Tauri already locks,
+# so no new crate enters Cargo.lock. Features are chosen per crate.
+windows = "0.62.2"
 
 [workspace.lints.rust]
 # Crates that must never contain unsafe code also carry #![forbid(unsafe_code)].
