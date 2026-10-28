@@ -1,0 +1,23 @@
+[package]
+name = "tp-contracts"
+description = "Shared contracts for the TP Remote engine: UI IPC DTOs and module descriptors."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[features]
+# Enables ts-rs derives so TypeScript bindings can be generated.
+# Only the bindings generator (tp-test-harness) turns this on.
+ts-bindings = ["dep:ts-rs"]
+
+[dependencies]
+serde = { workspace = true }
+ts-rs = { workspace = true, optional = true }
+
+[dev-dependencies]
+serde_json = { workspace = true }
+
+[lints]
+workspace = true

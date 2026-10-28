@@ -1,0 +1,30 @@
+[package]
+name = "tp-desktop"
+description = "TP Remote desktop shell (Tauri 2). Thin layer: commands delegate to tp-core."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lib]
+# The `_lib` suffix avoids a name clash between the lib and bin artifacts on Windows.
+name = "tp_desktop_lib"
+crate-type = ["rlib"]
+
+[build-dependencies]
+tauri-build = { workspace = true }
+
+[dependencies]
+tauri = { workspace = true }
+serde = { workspace = true }
+tp-contracts = { workspace = true }
+tp-core = { workspace = true }
+tp-diagnostics = { workspace = true }
+
+[dev-dependencies]
+tauri = { workspace = true, features = ["test"] }
+serde_json = { workspace = true }
+
+[lints]
+workspace = true

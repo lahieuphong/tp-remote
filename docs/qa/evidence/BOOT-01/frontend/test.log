@@ -1,0 +1,18 @@
+# command: npm run test
+# started: 2026-10-28T12:16:21  duration_s: 1.6  exit: 0
+
+> tp-remote@0.1.0 test
+> npm run test -w @tp-remote/desktop
+
+
+> @tp-remote/desktop@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.5 E:/Phong_Nho_IT/tp-remote/apps/desktop
+
+
+ Test Files  3 passed (3)
+      Tests  18 passed (18)
+   Start at  12:16:21
+   Duration  891ms (environment 74%, setup 13%, tests 9%, transform 3%, import 2%)

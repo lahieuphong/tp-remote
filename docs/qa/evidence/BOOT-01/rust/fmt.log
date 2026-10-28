@@ -1,0 +1,2 @@
+# command: cargo fmt --all -- --check
+# started: 2026-10-28T12:14:45  duration_s: 0  exit: 0

@@ -1,0 +1,10 @@
+{
+  "protocolVersion": 1,
+  "type": "hello",
+  "seq": 1,
+  "payload": {
+    "appVersion": "0.1.0",
+    "minProtocolVersion": 1,
+    "maxProtocolVersion": 1
+  }
+}

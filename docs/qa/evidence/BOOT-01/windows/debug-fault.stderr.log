@@ -1,0 +1,4 @@
+tp-remote level=info event=app.start version=0.1.0 profile=debug pid=45340
+tp-remote level=info event=app.ready
+tp-remote level=warn event=ipc.get_app_info result=err code=injectedFault
+tp-remote level=info event=app.exit

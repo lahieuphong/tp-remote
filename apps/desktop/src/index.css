@@ -1,0 +1,18 @@
+/* Scan only src/ for class names so generated files (e.g. src-tauri/gen) cannot change the CSS. */
+@import "tailwindcss" source(".");
+
+@theme {
+  --font-sans: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "Cascadia Mono", Consolas, ui-monospace, monospace;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-neutral-950 text-neutral-200 antialiased;
+  color-scheme: dark;
+}

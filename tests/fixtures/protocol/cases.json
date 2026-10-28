@@ -1,0 +1,29 @@
+{
+  "description": "Protocol v1 decoder fixtures. Each case is decoded on the given channel and must produce the expected result ('ok' or a ProtocolErrorKind name).",
+  "cases": [
+    { "file": "valid/hello.json", "channel": "signaling", "expect": "ok" },
+    { "file": "valid/hello.canonical.json", "channel": "signaling", "expect": "ok" },
+    { "file": "invalid/not-json.txt", "channel": "signaling", "expect": "malformedJson" },
+    { "file": "invalid/top-level-array.json", "channel": "signaling", "expect": "invalidEnvelope" },
+    { "file": "invalid/missing-version.json", "channel": "signaling", "expect": "invalidEnvelope" },
+    { "file": "invalid/version-string.json", "channel": "signaling", "expect": "invalidEnvelope" },
+    { "file": "invalid/version-negative.json", "channel": "signaling", "expect": "invalidEnvelope" },
+    { "file": "invalid/version-float.json", "channel": "signaling", "expect": "invalidEnvelope" },
+    { "file": "invalid/version-0.json", "channel": "signaling", "expect": "unsupportedVersion" },
+    { "file": "invalid/version-2.json", "channel": "signaling", "expect": "unsupportedVersion" },
+    { "file": "invalid/version-u64-max.json", "channel": "signaling", "expect": "unsupportedVersion" },
+    { "file": "invalid/unknown-type.json", "channel": "signaling", "expect": "unknownMessageType" },
+    { "file": "invalid/reserved-input-batch.json", "channel": "control", "expect": "notAuthorized" },
+    { "file": "invalid/reserved-sdp-offer.json", "channel": "signaling", "expect": "notAuthorized" },
+    { "file": "valid/hello.json", "channel": "control", "expect": "notAuthorized" },
+    { "file": "invalid/unknown-envelope-field.json", "channel": "signaling", "expect": "invalidEnvelope" },
+    { "file": "invalid/duplicate-field.json", "channel": "signaling", "expect": "invalidEnvelope" },
+    { "file": "invalid/seq-zero.json", "channel": "signaling", "expect": "invalidEnvelope" },
+    { "file": "invalid/missing-payload.json", "channel": "signaling", "expect": "invalidEnvelope" },
+    { "file": "invalid/payload-unknown-field.json", "channel": "signaling", "expect": "invalidPayload" },
+    { "file": "invalid/payload-wrong-type.json", "channel": "signaling", "expect": "invalidPayload" },
+    { "file": "invalid/payload-min-gt-max.json", "channel": "signaling", "expect": "invalidPayload" },
+    { "file": "invalid/payload-bad-app-version.json", "channel": "signaling", "expect": "invalidPayload" },
+    { "file": "invalid/payload-empty-app-version.json", "channel": "signaling", "expect": "invalidPayload" }
+  ]
+}

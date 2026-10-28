@@ -138,3 +138,41 @@ flowchart LR
 ## 8. References
 
 RFC 8825, 8826, 8827, 8831, 8832, 5764, 6184, 8445, 8656, 7675. W3C WebCodecs. Project pages for webrtc-rs, str0m and LiveKit (see ARCH-00 §13).
+
+## 9. Amendments
+
+### A1 — U-05 wire format decided: versioned JSON (BOOT-01, 2026-10-28)
+
+The user decided U-05. It replaces the ARCH-00 recommendation of Protobuf.
+
+**Decision.** The initial control and signaling protocol is **versioned JSON with Serde** (`tp-protocol`). It applies to the payloads of the signaling channel and of the `tp-control` DataChannel. Video stays RTP/H.264 and is unaffected.
+
+**Wire shape (v1).** Fields are always written in this order:
+
+```json
+{"protocolVersion":1,"type":"hello","seq":1,"payload":{"appVersion":"0.1.0","minProtocolVersion":1,"maxProtocolVersion":1}}
+```
+
+| Requirement | How v1 meets it |
+|---|---|
+| Explicit `protocolVersion` | An integer in every envelope; supported range `1..=1` (`MIN/MAX_SUPPORTED_PROTOCOL_VERSION`) |
+| Typed envelopes | `Message { seq, body: Body }`; the `Body` enum is typed per message |
+| Deterministic serialization | Fixed struct field order, no maps, no floats. Golden-byte test against `tests/fixtures/protocol/valid/hello.canonical.json` |
+| Validation of incoming data | Order of checks: size limit → JSON syntax → strict envelope → version → type (known, then authorised for the channel) → `seq ≥ 1` → strict payload → semantic checks |
+| Reject unsupported versions | `UnsupportedVersion { got, min, max }`. Non-integer versions are `InvalidEnvelope` |
+| Reject unknown or unauthorised commands | Unknown `type` → `UnknownMessageType`. Types that ARCH-00 §7.3 reserves for later phases (e.g. `inputBatch`, `sdpOffer`), or a known type on the wrong channel → `NotAuthorized` |
+| Strict payload size limits | Signaling 64 KiB, control 16 KiB, checked **before** parsing (ARCH-00 §7.6). serde_json's recursion limit bounds nesting |
+| No remote-control commands in BOOT-01 | v1 defines only the *shape* of `hello`; no handshake, transport or command exists |
+| Future migration to a binary format | Typed `Message`/`Body` values are independent of the encoding. Only `envelope.rs` knows JSON. A binary codec would be a new protocol major version, negotiated as in ARCH-00 §7.2 |
+
+**Changes to ARCH-00 §7.2:**
+- A single integer `protocolVersion` replaces `proto_major`/`proto_minor` for v1.
+- v1 is **strict**: unknown fields are rejected (`deny_unknown_fields`) rather than ignored, and duplicate keys are rejected. As a result, any change to a message's shape requires a new protocol version until a compatible-extension rule is designed (no later than NET-03).
+- `sessionId` is not yet part of the envelope. It is added together with sessions (NET-03).
+- Peer-supplied text in errors is truncated and sanitised before it is stored or logged.
+
+**Separation.** UI IPC contracts (`tp-contracts::ipc`, consumed by React through ts-rs) are separate from network protocol contracts (`tp-protocol`). No TypeScript bindings are generated for network messages.
+
+**Verification (BOOT-01).** All pass:
+- `tests/fixtures/protocol/cases.json`: 24 cases, run by `crates/tp-protocol/tests/fixtures.rs`;
+- `crates/tp-protocol/tests/codec.rs`: 11 tests.

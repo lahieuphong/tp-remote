@@ -129,6 +129,14 @@ The following are excluded:
 | U-15 | What is TP Remote's own license and commercial model? | Proprietary · OSS (which license) | Needed to finalize the dependency license policy (`deny.toml`). | Before BOOT-01 adds dependencies | BOOT-01 policy |
 | U-16 | Where is the device private key stored? | macOS Keychain; Windows DPAPI vs. Credential Manager | OS keystore only, never plaintext. | NET-03 | — |
 
+> **Status update (BOOT-01, 2026-10-28):** the user decided U-05, U-09, U-13 and U-15.
+> - **U-05:** versioned JSON with Serde, not Protobuf (ADR-002 amendment A1).
+> - **U-09:** npm (ADR-001 amendment A1).
+> - **U-13:** ts-rs generated bindings, not hand-written types (ADR-001 amendment A1).
+> - **U-15:** private internal development, all rights reserved (ADR-001 amendment A1).
+>
+> The IPC command listed as `app_info` in §3.5 is implemented as `get_app_info`. The recommendations above for U-05 and U-13 are kept for history only.
+
 ---
 
 ## 3. System architecture

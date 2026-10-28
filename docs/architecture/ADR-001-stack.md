@@ -103,3 +103,24 @@ R-01 (no Rust toolchain installed), R-05 (WKWebView media), R-12 (supply chain) 
 - FS-F fails on both platforms, so no acceptable render path exists inside or alongside Tauri.
 - Tauri 2 security or maintenance status changes materially.
 - The brief changes the platform set (for example, adds Linux or mobile).
+
+## 10. Amendments
+
+### A1 — BOOT-01 decisions (2026-10-28)
+
+The user decided U-09, U-13 and U-15 in the BOOT-01 prompt. These decisions supersede the corresponding rows of ARCH-00 §2.2.
+
+| ID | Decision | Implementation in BOOT-01 |
+|---|---|---|
+| U-09 | **npm** is the JavaScript package manager. pnpm and Yarn are not used and were not installed. | npm workspaces (root `package.json` → `apps/desktop`). `package-lock.json` is committed. Reproducible install: `npm ci`. The system Node.js (24.19.0) and npm (11.16.0) are used unchanged. |
+| U-13 | **Rust-first shared types with `ts-rs`.** DTOs are defined in Rust; TypeScript is generated and never edited by hand. This replaces the ARCH-00 recommendation of hand-written types. | DTOs live in `tp-contracts::ipc` behind the `ts-bindings` feature; only `tp-test-harness` enables it, so ts-rs is not linked into the app. Generator: `npm run bindings:generate`. Drift check: `npm run bindings:check`, plus the Rust test `committed_bindings_have_not_drifted`. Shared fixtures in `tests/fixtures/ipc` are checked by both Rust and Vitest. |
+| U-15 | **Private internal development; all rights reserved until further review.** No public source release and no commercial distribution during BOOT-01. Dependencies should preferably use MIT, Apache-2.0, BSD or ISC. GPL, AGPL, LGPL, MPL, unknown or incompatible licenses are **flagged for review, not rejected automatically**. | Cargo `license = "LicenseRef-TP-Remote-Proprietary"`, `publish = false`; npm `"license": "UNLICENSED"`, `"private": true`; `LICENSE.txt`. Transitive inventory: `npm run licenses`. Findings are in `docs/architecture/BOOT-01-dependency-map.md` §4. This is an engineering inventory, **not** a legal certification. The legal owner and entity are still unresolved. |
+
+**Version record.** These are the pins chosen in BOOT-01 after registry and compatibility checks; see BOOT-01-dependency-map:
+- Rust toolchain 1.99.1 (`rust-toolchain.toml`);
+- tauri 2.12.5, tauri-build 2.7.4, `@tauri-apps/api` 2.12.4, `@tauri-apps/cli` 2.12.4;
+- ts-rs 12.0.1;
+- React 19.3.1, Vite 8.3.5;
+- TypeScript **6.0.3**, not 7.0.2, because typescript-eslint 8.72.1 supports TypeScript `<6.1.0`.
+
+Tauri 3.0.0-alpha releases were rejected as prereleases.

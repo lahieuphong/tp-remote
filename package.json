@@ -1,0 +1,33 @@
+{
+  "name": "tp-remote",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "description": "TP Remote — internal development workspace. All rights reserved.",
+  "workspaces": [
+    "apps/desktop"
+  ],
+  "engines": {
+    "node": ">=24.15.0",
+    "npm": ">=11.0.0"
+  },
+  "scripts": {
+    "dev": "npm run tauri -w @tp-remote/desktop -- dev",
+    "build": "npm run build -w @tp-remote/desktop",
+    "build:app": "npm run tauri -w @tp-remote/desktop -- build --no-bundle",
+    "build:app:debug": "npm run tauri -w @tp-remote/desktop -- build --debug --no-bundle",
+    "typecheck": "npm run typecheck -w @tp-remote/desktop",
+    "lint": "npm run lint -w @tp-remote/desktop",
+    "test": "npm run test -w @tp-remote/desktop",
+    "bindings:generate": "cargo run -q --locked -p tp-test-harness --bin tp-bindings -- generate apps/desktop/src/bindings",
+    "bindings:check": "cargo run -q --locked -p tp-test-harness --bin tp-bindings -- check apps/desktop/src/bindings",
+    "contract:check": "npm run bindings:check && cargo test -q --locked -p tp-contracts -p tp-protocol -p tp-test-harness -p tp-desktop && npm run test -w @tp-remote/desktop -- src/contract",
+    "rust:fmt": "cargo fmt --all -- --check",
+    "rust:check": "cargo check --workspace --all-targets --locked",
+    "rust:test": "cargo test --workspace --locked",
+    "rust:clippy": "cargo clippy --workspace --all-targets --locked -- -D warnings",
+    "licenses": "node scripts/license-report.mjs",
+    "check": "node scripts/check.mjs",
+    "smoke:windows": "powershell -NoProfile -File scripts/smoke-windows.ps1"
+  }
+}

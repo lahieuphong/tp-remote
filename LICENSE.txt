@@ -1,0 +1,10 @@
+TP Remote
+Copyright (c) 2026 the TP Remote project owner (legal entity to be confirmed).
+All rights reserved.
+
+This repository is private internal development software. No license is granted to
+copy, modify, distribute or use it outside the project, and it must not be published
+or distributed commercially until the ownership and licensing review is complete.
+
+Third-party components keep their own licenses; see
+docs/architecture/BOOT-01-dependency-map.md for the dependency license inventory.

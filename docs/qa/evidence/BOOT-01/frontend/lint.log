@@ -1,0 +1,9 @@
+# command: npm run lint
+# started: 2026-10-28T12:16:18  duration_s: 2.8  exit: 0
+
+> tp-remote@0.1.0 lint
+> npm run lint -w @tp-remote/desktop
+
+
+> @tp-remote/desktop@0.1.0 lint
+> eslint . --max-warnings=0

@@ -1,0 +1,1 @@
+{"protocolVersion":1,"type":"runShellCommand","seq":1,"payload":{"cmd":"whoami"}}

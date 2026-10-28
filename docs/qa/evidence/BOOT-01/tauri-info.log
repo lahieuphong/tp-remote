@@ -1,0 +1,30 @@
+
+[✔] Environment
+    - OS: Windows 10.0.26100 x86_64 (X64)
+    ✔ WebView2: 155.0.4283.62
+    ✔ MSVC: Visual Studio Build Tools 2022
+    ✔ rustc: 1.99.1 (58cf8f9c3 2026-10-13)
+    ✔ cargo: 1.99.1 (5f94df478 2026-08-27)
+    ✔ rustup: 1.29.2 (d8c92c676 2026-10-21)
+    ✔ Rust toolchain: 1.99.1-x86_64-pc-windows-msvc (overridden by 'E:\Phong_Nho_IT\tp-remote\rust-toolchain.toml')
+    - node: 24.19.0
+    - yarn: 1.22.22
+    - npm: 11.16.0
+
+[-] Packages
+    - tauri 🦀: 2.12.5
+    - tauri-build 🦀: 2.7.4
+    - wry 🦀: 0.57.1
+    - tao 🦀: 0.37.2
+    - @tauri-apps/api  ⱼₛ: 2.12.4
+    - @tauri-apps/cli  ⱼₛ: 2.12.4
+
+[-] Plugins
+
+[-] App
+    - build-type: build
+    - CSP: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src ipc: http://ipc.localhost; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+    - frontendDist: ../dist
+    - devUrl: http://127.0.0.1:1420/
+    - framework: React
+    - bundler: Vite

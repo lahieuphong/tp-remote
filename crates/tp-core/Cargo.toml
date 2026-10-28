@@ -1,0 +1,23 @@
+[package]
+name = "tp-core"
+description = "TP Remote app-core: wires the engine crates together and answers shell queries."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+tp-contracts = { workspace = true }
+tp-protocol = { workspace = true }
+tp-session = { workspace = true }
+tp-security = { workspace = true }
+tp-capture = { workspace = true }
+tp-input = { workspace = true }
+tp-media = { workspace = true }
+tp-transport = { workspace = true }
+tp-signaling = { workspace = true }
+tp-diagnostics = { workspace = true }
+
+[lints]
+workspace = true

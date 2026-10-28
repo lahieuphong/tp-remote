@@ -1,0 +1,9 @@
+# command: npm run typecheck
+# started: 2026-10-28T12:16:17  duration_s: 1.2  exit: 0
+
+> tp-remote@0.1.0 typecheck
+> npm run typecheck -w @tp-remote/desktop
+
+
+> @tp-remote/desktop@0.1.0 typecheck
+> tsc --noEmit -p tsconfig.json

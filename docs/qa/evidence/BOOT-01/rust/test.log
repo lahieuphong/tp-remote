@@ -1,0 +1,283 @@
+# command: cargo test --workspace --locked
+# started: 2026-10-28T12:15:14  duration_s: 13  exit: 0
+   Compiling termcolor v1.4.1
+   Compiling tp-desktop v0.1.0 (E:\Phong_Nho_IT\tp-remote\apps\desktop\src-tauri)
+   Compiling ts-rs-macros v12.0.1
+   Compiling ts-rs v12.0.1
+   Compiling tp-contracts v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-contracts)
+   Compiling tp-protocol v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-protocol)
+   Compiling tp-input v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-input)
+   Compiling tp-media v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-media)
+   Compiling tp-capture v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-capture)
+   Compiling tp-diagnostics v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-diagnostics)
+   Compiling tp-transport v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-transport)
+   Compiling tp-session v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-session)
+   Compiling tp-security v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-security)
+   Compiling tp-signaling v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-signaling)
+   Compiling tp-test-harness v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-test-harness)
+   Compiling tp-core v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.55s
+     Running unittests src\lib.rs (target\debug\deps\tp_capture-3754b8071d265f56.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\lib.rs (target\debug\deps\tp_contracts-95964726443d031f.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\ipc_fixtures.rs (target\debug\deps\ipc_fixtures-316493f8bfee9cc6.exe)
+
+running 6 tests
+test ipc_error_uses_camel_case_codes ... ok
+test a_missing_webview_version_serializes_as_null ... ok
+test serialization_round_trips ... ok
+test rust_serialization_equals_the_valid_fixture ... ok
+test the_valid_fixture_deserializes_to_the_canonical_value ... ok
+test invalid_fixtures_are_rejected_by_rust ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\lib.rs (target\debug\deps\tp_core-855bad5958af8a7e.exe)
+
+running 4 tests
+test tests::build_profile_matches_debug_assertions ... ok
+test tests::app_info_reports_this_build_honestly ... ok
+test tests::engine_modules_cover_every_engine_crate_exactly_once ... ok
+test tests::no_remote_capability_crate_claims_an_implementation_in_boot01 ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\lib.rs (target\debug\deps\tp_desktop_lib-0443398541e2160d.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\main.rs (target\debug\deps\tp_desktop-750493d545204270.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\config.rs (target\debug\deps\config-5dda404c4664d525.exe)
+
+running 4 tests
+test the_vite_dev_server_binds_to_loopback_only ... ok
+test no_tauri_plugins_are_linked ... ok
+test the_only_capability_grants_only_get_app_info_to_the_main_window ... ok
+test tauri_config_is_locked_down ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\ipc.rs (target\debug\deps\ipc-66b235bd95f8fb53.exe)
+
+running 9 tests
+tp-remote level=warn event=ipc.get_app_info result=err code=injectedFault
+tp-remote level=info event=ipc.get_app_info result=ok
+test debug_builds_can_inject_an_ipc_fault ... ok
+test without_fault_injection_the_response_is_ok ... ok
+tp-remote level=info event=ipc.get_app_info result=ok
+test plugins_that_are_not_installed_are_rejected ... ok
+test windows_other_than_main_cannot_call_get_app_info ... ok
+test remote_origins_cannot_call_get_app_info ... ok
+tp-remote level=info event=ipc.get_app_info result=ok
+test unknown_commands_are_rejected ... ok
+test core_commands_are_denied_because_no_core_permission_is_granted ... ok
+test get_app_info_returns_the_typed_contract ... ok
+test startup_creates_only_the_main_window_and_teardown_is_clean ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src\lib.rs (target\debug\deps\tp_diagnostics-0a33cfced3044f96.exe)
+
+running 4 tests
+test tests::empty_and_quoted_values_are_escaped ... ok
+test tests::keys_and_events_are_restricted_to_identifier_characters ... ok
+test tests::values_cannot_inject_lines_or_fields ... ok
+test tests::formats_plain_fields ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\lib.rs (target\debug\deps\tp_input-0db70e33373e0ae1.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\lib.rs (target\debug\deps\tp_media-2b8f7aa21906405f.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\lib.rs (target\debug\deps\tp_protocol-081b6f3b11129caf.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\codec.rs (target\debug\deps\codec-26ed486e8da9b680.exe)
+
+running 11 tests
+test writer_uses_the_current_protocol_version ... ok
+test unsupported_version_reports_the_supported_range ... ok
+test oversized_messages_are_rejected_before_parsing ... ok
+test encode_then_decode_round_trips ... ok
+test a_message_at_the_limit_is_not_rejected_for_size ... ok
+test encoder_refuses_invalid_messages ... ok
+test version_support_is_exactly_v1 ... ok
+test deeply_nested_payloads_fail_without_crashing ... ok
+test errors_do_not_echo_long_or_control_characters_from_the_peer ... ok
+test encoding_is_deterministic_across_calls ... ok
+test encoding_matches_the_canonical_fixture_byte_for_byte ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\fixtures.rs (target\debug\deps\fixtures-a8bc3ab4b99d5e9d.exe)
+
+running 2 tests
+test every_fixture_file_is_listed_in_the_manifest ... ok
+test every_fixture_produces_its_expected_result ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\lib.rs (target\debug\deps\tp_security-5198228927293857.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\lib.rs (target\debug\deps\tp_session-a60bf548d46d1af2.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\lib.rs (target\debug\deps\tp_signaling-1fc921dd82aec6c1.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\lib.rs (target\debug\deps\tp_test_harness-8de529e29df6c272.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\bin\tp-bindings.rs (target\debug\deps\tp_bindings-9080bb869fdd81df.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\bindings.rs (target\debug\deps\bindings-4187d17a2e242ba1.exe)
+
+running 5 tests
+test no_binding_uses_bigint ... ok
+test every_type_file_carries_the_ts_rs_header ... ok
+test generation_is_deterministic ... ok
+test app_info_binding_matches_the_camel_case_json_shape ... ok
+test committed_bindings_have_not_drifted ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\workspace_boundaries.rs (target\debug\deps\workspace_boundaries-9a1b3b5f57144f73.exe)
+
+running 6 tests
+test platform_crates_have_no_async_runtime ... ok
+test only_the_shell_depends_on_tauri ... ok
+test designated_crates_forbid_unsafe_code ... ok
+test internal_dependency_graph_is_acyclic ... ok
+test workspace_contains_exactly_the_architecture_crates_and_the_shell ... ok
+test internal_dependencies_follow_the_allowed_edges ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running unittests src\lib.rs (target\debug\deps\tp_transport-03595bc0c663ec3e.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests tp_capture
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests tp_contracts
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests tp_core
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests tp_desktop_lib
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests tp_diagnostics
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests tp_input
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests tp_media
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests tp_protocol
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests tp_security
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests tp_session
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests tp_signaling
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests tp_test_harness
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests tp_transport
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s

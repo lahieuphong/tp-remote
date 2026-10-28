@@ -1,0 +1,11 @@
+== hand-edited BuildProfile.ts: exit=1
+tp-bindings: apps/desktop/src/bindings has drifted from the Rust contracts:
+  - out of date: BuildProfile.ts
+Run `npm run bindings:generate` and review the diff.
+== extra file: exit=1
+tp-bindings: apps/desktop/src/bindings has drifted from the Rust contracts:
+  - out of date: BuildProfile.ts
+  - not generated (remove it): Extra.ts
+Run `npm run bindings:generate` and review the diff.
+== after revert: exit=0
+tp-bindings: apps/desktop/src/bindings is up to date

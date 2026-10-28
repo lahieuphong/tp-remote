@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "main-window",
+  "description": "BOOT-01: the main window may call get_app_info and nothing else. No core, shell, fs, http or event permissions are granted.",
+  "windows": ["main"],
+  "permissions": ["allow-get-app-info"]
+}

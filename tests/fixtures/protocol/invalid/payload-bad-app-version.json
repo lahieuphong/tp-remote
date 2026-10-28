@@ -1,0 +1,1 @@
+{"protocolVersion":1,"type":"hello","seq":1,"payload":{"appVersion":"<script>alert(1)</script>","minProtocolVersion":1,"maxProtocolVersion":1}}

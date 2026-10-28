@@ -1,0 +1,20 @@
+[package]
+name = "tp-test-harness"
+description = "Test-only TP Remote tooling: TypeScript bindings generator and workspace checks. Never shipped."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "tp-bindings"
+path = "src/bin/tp-bindings.rs"
+
+[dependencies]
+tp-contracts = { workspace = true, features = ["ts-bindings"] }
+ts-rs = { workspace = true }
+serde_json = { workspace = true }
+
+[lints]
+workspace = true

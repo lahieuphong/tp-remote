@@ -1,0 +1,14 @@
+[package]
+name = "tp-transport"
+description = "TP Remote WebRTC transport (foundation only in BOOT-01)."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+tp-contracts = { workspace = true }
+
+[lints]
+workspace = true

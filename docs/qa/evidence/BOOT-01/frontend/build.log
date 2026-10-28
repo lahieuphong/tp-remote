@@ -1,0 +1,20 @@
+# command: npm run build
+# started: 2026-10-28T12:16:22  duration_s: 0.9  exit: 0
+
+> tp-remote@0.1.0 build
+> npm run build -w @tp-remote/desktop
+
+
+> @tp-remote/desktop@0.1.0 build
+> vite build
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 28 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.44 kB │ gzip:  0.28 kB
+dist/assets/index-CodHf9RM.css   14.31 kB │ gzip:  3.91 kB
+dist/assets/index-Bl2WItWU.js   229.61 kB │ gzip: 71.80 kB
+
+✓ built in 111ms

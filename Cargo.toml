@@ -1,0 +1,58 @@
+[workspace]
+resolver = "3"
+members = [
+    "crates/tp-contracts",
+    "crates/tp-protocol",
+    "crates/tp-session",
+    "crates/tp-security",
+    "crates/tp-capture",
+    "crates/tp-input",
+    "crates/tp-media",
+    "crates/tp-transport",
+    "crates/tp-signaling",
+    "crates/tp-diagnostics",
+    "crates/tp-core",
+    "crates/tp-test-harness",
+    "apps/desktop/src-tauri",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.90"
+license = "LicenseRef-TP-Remote-Proprietary"
+publish = false
+
+[workspace.dependencies]
+# Internal crates (dependency rules: docs/architecture/ARCH-00.md §3.3,
+# enforced by crates/tp-test-harness/tests/workspace_boundaries.rs).
+tp-contracts = { path = "crates/tp-contracts" }
+tp-protocol = { path = "crates/tp-protocol" }
+tp-session = { path = "crates/tp-session" }
+tp-security = { path = "crates/tp-security" }
+tp-capture = { path = "crates/tp-capture" }
+tp-input = { path = "crates/tp-input" }
+tp-media = { path = "crates/tp-media" }
+tp-transport = { path = "crates/tp-transport" }
+tp-signaling = { path = "crates/tp-signaling" }
+tp-diagnostics = { path = "crates/tp-diagnostics" }
+tp-core = { path = "crates/tp-core" }
+
+# External crates. Exact versions are locked in Cargo.lock; see
+# docs/architecture/BOOT-01-dependency-map.md for the compatibility checks.
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+thiserror = "2.0.21"
+ts-rs = "12.0.1"
+tauri = "2.12.5"
+tauri-build = "2.7.4"
+
+[workspace.lints.rust]
+# Crates that must never contain unsafe code also carry #![forbid(unsafe_code)].
+unsafe_code = "deny"
+
+[workspace.lints.clippy]
+# No placeholder code paths that can be reached at runtime.
+todo = "deny"
+unimplemented = "deny"
+dbg_macro = "deny"

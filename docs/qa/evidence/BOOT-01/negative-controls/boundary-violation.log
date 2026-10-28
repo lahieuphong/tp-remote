@@ -1,0 +1,35 @@
+
+running 6 tests
+test platform_crates_have_no_async_runtime ... ok
+test only_the_shell_depends_on_tauri ... ok
+test workspace_contains_exactly_the_architecture_crates_and_the_shell ... ok
+test internal_dependencies_follow_the_allowed_edges ... FAILED
+test internal_dependency_graph_is_acyclic ... ok
+test designated_crates_forbid_unsafe_code ... ok
+
+failures:
+
+---- internal_dependencies_follow_the_allowed_edges stdout ----
+
+thread 'internal_dependencies_follow_the_allowed_edges' (47648) panicked at crates\tp-test-harness\tests\workspace_boundaries.rs:149:5:
+boundary violations:
+tp-capture -> tp-transport (normal) is not allowed
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    internal_dependencies_follow_the_allowed_edges
+
+test result: FAILED. 5 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+---- after revert ----
+
+running 6 tests
+test designated_crates_forbid_unsafe_code ... ok
+test internal_dependency_graph_is_acyclic ... ok
+test workspace_contains_exactly_the_architecture_crates_and_the_shell ... ok
+test only_the_shell_depends_on_tauri ... ok
+test internal_dependencies_follow_the_allowed_edges ... ok
+test platform_crates_have_no_async_runtime ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s

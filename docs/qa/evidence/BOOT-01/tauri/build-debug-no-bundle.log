@@ -1,0 +1,36 @@
+# command: npm run build:app:debug
+# started: 2026-10-28T12:18:26  duration_s: 16  exit: 0
+
+> tp-remote@0.1.0 build:app:debug
+> npm run tauri -w @tp-remote/desktop -- build --debug --no-bundle
+
+
+> @tp-remote/desktop@0.1.0 tauri
+> tauri build --debug --no-bundle
+
+        Info `tauri-build` dependency has workspace inheritance enabled. The features array won't be automatically rewritten. Expected features: []
+        Info `tauri` dependency has workspace inheritance enabled. The features array won't be automatically rewritten. Expected features: []
+        Info Looking up installed tauri packages to check mismatched versions...
+     Running beforeBuildCommand `npm run build`
+
+> @tp-remote/desktop@0.1.0 build
+> vite build
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 28 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.44 kB │ gzip:  0.27 kB
+dist/assets/index-Dlbt7n8q.css   14.25 kB │ gzip:  3.89 kB
+dist/assets/index-DTXrE-Bs.js   229.61 kB │ gzip: 71.80 kB
+
+✓ built in 100ms
+   Compiling tauri v2.12.5
+   Compiling tp-protocol v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-protocol)
+   Compiling tauri-macros v2.7.4
+   Compiling tp-diagnostics v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-diagnostics)
+   Compiling tp-core v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-core)
+   Compiling tp-desktop v0.1.0 (E:\Phong_Nho_IT\tp-remote\apps\desktop\src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 14.03s
+       Built application at: E:\Phong_Nho_IT\tp-remote\target\debug\tp-desktop.exe
