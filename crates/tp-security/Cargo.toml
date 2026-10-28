@@ -1,11 +1,17 @@
 [package]
 name = "tp-security"
-description = "TP Remote consent, authorization, device identity and PAKE (foundation only in BOOT-01)."
+description = "TP Remote security foundation: authentication results, local consent, consent grants and the default-deny authorization policy."
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 publish.workspace = true
+
+[features]
+# Constructors for proof types, for tests only. The desktop app never enables this
+# (enforced by tp-test-harness/tests/workspace_boundaries.rs). There is deliberately no
+# production constructor for LocalConsent or AuthenticatedPeer in BOOT-02.
+test-support = []
 
 [dependencies]
 tp-contracts = { workspace = true }

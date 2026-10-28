@@ -88,3 +88,16 @@ Full output: `docs/qa/evidence/BOOT-01/tauri-info.log`.
 - macOS (any check): no Mac.
 - Non-100% display scaling: every display is at 96 DPI, and changing scaling would modify user display settings, which this phase did not do.
 - Second-device or network behaviour: there is no network feature in BOOT-01.
+
+## 7. Erratum (added in BOOT-02, 2026-10-28)
+
+§1 above says "Git 2.53.0.windows.2 (workspace is not a git repository)". **That was wrong.** BOOT-01 never ran a git check; it repeated an ARCH-00 observation, which had been true when ARCH-00 ran.
+
+| Fact (verified in BOOT-02) | Value |
+|---|---|
+| Repository root | `E:/Phong_Nho_IT/tp-remote` (`.git` in the workspace) |
+| First commit | `3166183` "Initial commit: architecture, QA, security, roadmap docs", 2026-10-28 11:16:57 +07:00 — before BOOT-01 started |
+| BOOT-01 commit | `7a9ae99` "BOOT-01: bootstrap Rust workspace and Tauri desktop app", 13:11:00 +07:00 |
+| Branch / remote | `main`, tracking `origin/main` = `7a9ae99`, origin `https://github.com/lahieuphong/tp-remote.git` |
+
+These commits were made outside the assistant's actions; the assistant created no commits and pushed nothing.

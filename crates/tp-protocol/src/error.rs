@@ -67,6 +67,41 @@ impl ProtocolErrorKind {
     }
 }
 
+/// Maps to the cross-platform error model. Peer-supplied details (type names, serde
+/// messages) are dropped: only static context crosses this boundary.
+impl From<ProtocolError> for tp_contracts::error::CoreError {
+    fn from(error: ProtocolError) -> Self {
+        use tp_contracts::error::{CoreError, ErrorCategory};
+        match error {
+            ProtocolError::UnsupportedVersion { .. } => CoreError::new(
+                ErrorCategory::ProtocolMismatch,
+                "unsupported protocol version",
+            ),
+            ProtocolError::TooLarge { .. } => {
+                CoreError::new(ErrorCategory::InvalidPayload, "message too large")
+            }
+            ProtocolError::MalformedJson => {
+                CoreError::new(ErrorCategory::InvalidPayload, "message is not valid JSON")
+            }
+            ProtocolError::InvalidEnvelope(_) => {
+                CoreError::new(ErrorCategory::InvalidPayload, "invalid envelope")
+            }
+            ProtocolError::UnknownMessageType { .. } => {
+                CoreError::new(ErrorCategory::InvalidPayload, "unknown message type")
+            }
+            ProtocolError::NotAuthorized { .. } => {
+                CoreError::new(ErrorCategory::InvalidPayload, "message type not authorized")
+            }
+            ProtocolError::InvalidPayload(_) => {
+                CoreError::new(ErrorCategory::InvalidPayload, "invalid payload")
+            }
+            ProtocolError::Encode => {
+                CoreError::new(ErrorCategory::InternalError, "message could not be encoded")
+            }
+        }
+    }
+}
+
 /// Truncates to [`MAX_ECHOED_LEN`] characters and replaces anything that is not
 /// printable ASCII, so attacker-controlled text cannot inject into logs.
 pub(crate) fn sanitize(text: &str) -> String {

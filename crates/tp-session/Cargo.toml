@@ -1,11 +1,16 @@
 [package]
 name = "tp-session"
-description = "TP Remote session manager and session state machine (foundation only in BOOT-01)."
+description = "TP Remote session lifecycle: deterministic state machine and session registry."
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 publish.workspace = true
+
+[features]
+# Deterministic identifier source for tests. Never enabled by the desktop app
+# (enforced by tp-test-harness/tests/workspace_boundaries.rs).
+test-support = []
 
 [dependencies]
 tp-contracts = { workspace = true }

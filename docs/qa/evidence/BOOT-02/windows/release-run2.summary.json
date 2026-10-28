@@ -1,0 +1,58 @@
+{
+    "label":  "release-run2",
+    "started":  "2026-10-28T13:47:47",
+    "exe":  "E:\\Phong_Nho_IT\\tp-remote\\target\\release\\tp-desktop.exe",
+    "exeSha256":  "4DE228A993C7E12E12929DD3878EBB91BFB1809EE0F0115F33437E5F05883F76",
+    "injectFault":  false,
+    "pid":  46900,
+    "exitedDuringStartup":  false,
+    "ipcObserved":  true,
+    "secondsToIpc":  0.44,
+    "windowVisible":  true,
+    "windowTitle":  "TP Remote",
+    "token":  "elevated=False integrity=Medium (0x2000)",
+    "dpiAwareness":  "per-monitor (PerMonitorV2), window DPI 96",
+    "initialRect":  "402,120,1116,799",
+    "screenshotInitial":  "1116x799",
+    "processTree":  [
+                        "tp-desktop.exe#46900\u003c-36248",
+                        "msedgewebview2.exe#49784\u003c-46900",
+                        "msedgewebview2.exe#19448\u003c-49784",
+                        "msedgewebview2.exe#5912\u003c-49784",
+                        "msedgewebview2.exe#45460\u003c-49784",
+                        "msedgewebview2.exe#49832\u003c-49784",
+                        "msedgewebview2.exe#35656\u003c-49784"
+                    ],
+    "tcpListeners":  [
+
+                     ],
+    "udpEndpoints":  [
+
+                     ],
+    "treePidsBeforeClose":  [
+                                46900,
+                                49784,
+                                19448,
+                                5912,
+                                45460,
+                                49832,
+                                35656
+                            ],
+    "closeMessageSent":  true,
+    "exitedAfterClose":  true,
+    "exitCode":  0,
+    "survivingPids":  [
+
+                      ],
+    "cleanExit":  true,
+    "stderrEvents":  [
+                         "tp-remote level=info event=app.start version=0.1.0 profile=release pid=46900",
+                         "tp-remote level=info event=app.ready",
+                         "tp-remote level=info event=ipc.get_app_info result=ok",
+                         "tp-remote level=info event=app.exit"
+                     ],
+    "stderrOther":  [
+
+                    ],
+    "finished":  "2026-10-28T13:47:49"
+}

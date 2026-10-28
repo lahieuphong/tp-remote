@@ -242,3 +242,154 @@ fn designated_crates_forbid_unsafe_code() {
         }
     }
 }
+
+fn workspace_root() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..")
+}
+
+/// Non-test Rust sources: `src/` of every crate and of the shell, excluding `tests.rs`
+/// files that are compiled only under `#[cfg(test)]`.
+fn production_sources() -> Vec<(PathBuf, String)> {
+    fn walk(dir: &std::path::Path, out: &mut Vec<PathBuf>) {
+        for entry in std::fs::read_dir(dir).expect("read dir") {
+            let path = entry.expect("entry").path();
+            if path.is_dir() {
+                walk(&path, out);
+            } else if path.extension().is_some_and(|e| e == "rs")
+                && path.file_name().is_some_and(|n| n != "tests.rs")
+            {
+                out.push(path);
+            }
+        }
+    }
+    let root = workspace_root();
+    let mut dirs = vec![root.join("apps/desktop/src-tauri/src")];
+    for entry in std::fs::read_dir(root.join("crates")).expect("crates") {
+        dirs.push(entry.expect("entry").path().join("src"));
+    }
+    let mut files = Vec::new();
+    for dir in dirs {
+        walk(&dir, &mut files);
+    }
+    files
+        .into_iter()
+        .map(|path| {
+            let text = std::fs::read_to_string(&path).expect("read source");
+            let normalized = path.to_string_lossy().replace('\\', "/");
+            (PathBuf::from(normalized), text)
+        })
+        .collect()
+}
+
+fn code_lines(text: &str) -> impl Iterator<Item = (usize, &str)> {
+    text.lines()
+        .enumerate()
+        .map(|(n, line)| (n + 1, line.split("//").next().unwrap_or("")))
+}
+
+// T-STA-08 / ARCH-00 §4.3: only tp-core's input gate may call InputController::inject.
+#[test]
+fn only_the_input_gate_calls_inject() {
+    let mut calls_in_gate = 0;
+    for (path, text) in production_sources() {
+        for (n, code) in code_lines(&text) {
+            if code.contains(".inject(") {
+                let display = path.display().to_string();
+                assert!(
+                    display.ends_with("crates/tp-core/src/gate.rs"),
+                    "{display}:{n} calls inject outside the input gate"
+                );
+                calls_in_gate += 1;
+            }
+        }
+    }
+    assert_eq!(
+        calls_in_gate, 1,
+        "the gate itself must call inject exactly once"
+    );
+}
+
+// T-CONTRACT-05: interfaces exist, implementations do not. A future phase that adds one
+// must change this list deliberately (and the advertised capabilities with it).
+#[test]
+fn no_production_platform_implementation_exists_yet() {
+    const NOT_YET_IMPLEMENTED: [&str; 9] = [
+        "CaptureProvider",
+        "CaptureStream",
+        "InputController",
+        "VideoEncoder",
+        "VideoDecoder",
+        "Transport",
+        "TransportSession",
+        "PermissionManager",
+        "DeviceIdentity",
+    ];
+    for (path, text) in production_sources() {
+        for (n, code) in code_lines(&text) {
+            let code = code.trim_start();
+            if !code.starts_with("impl") {
+                continue;
+            }
+            for name in NOT_YET_IMPLEMENTED {
+                let pattern = format!(" {name} for ");
+                let pattern_path = format!("::{name} for ");
+                assert!(
+                    !code.contains(&pattern) && !code.contains(&pattern_path),
+                    "{}:{n}: production implementation of {name}",
+                    path.display()
+                );
+            }
+        }
+    }
+}
+
+// T-STA-10: the desktop app's own build graph never enables test-only features or crates.
+#[test]
+fn the_app_build_graph_has_no_test_support() {
+    let cargo = std::env::var("CARGO").unwrap_or_else(|_| "cargo".to_owned());
+    let output = Command::new(cargo)
+        .args([
+            "tree",
+            "-p",
+            DESKTOP,
+            "-e",
+            "normal,build",
+            "--prefix",
+            "none",
+            "-f",
+            "{p}|{f}",
+            "--offline",
+            "--locked",
+        ])
+        .current_dir(workspace_root())
+        .output()
+        .expect("run cargo tree");
+    assert!(
+        output.status.success(),
+        "cargo tree failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let tree = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        tree.lines().any(|l| l.starts_with("tp-security ")),
+        "tree looks empty:\n{tree}"
+    );
+    for line in tree.lines() {
+        assert!(
+            !line.contains("test-support"),
+            "test-only feature in the app build: {line}"
+        );
+        assert!(
+            !line.starts_with("tp-test-harness "),
+            "harness in the app build: {line}"
+        );
+        assert!(
+            !line.starts_with("ts-rs "),
+            "ts-rs in the app build: {line}"
+        );
+        assert!(
+            !line.contains("ts-bindings"),
+            "binding generation in the app build: {line}"
+        );
+    }
+}

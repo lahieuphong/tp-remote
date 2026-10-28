@@ -217,3 +217,12 @@ All measurements record: device IDs, OS build, app build (commit hash once git i
 | Impairment with OS tools on Windows | Would need driver-based tools and installation (R-13); SimNet covers the deterministic cases |
 | Release signing | No certificates or Apple account confirmed (R-09) |
 | Glass-to-glass latency | Needs a ≥ 120 fps camera and two devices |
+
+## 14. Additions from BOOT-02
+
+1. **Exhaustive state exploration instead of property-test libraries.** For pure state machines, every reachable configuration is explored and invariants are checked on every edge (`crates/tp-session/tests/exploration.rs`; 4,728 configurations and 148,157 edges in BOOT-02). An independently written transition spec (`tests/common/mod.rs::spec_allows`) is compared against the implementation. No new dependency is needed.
+2. **Negative controls are standard practice for guards.** Every structural guard (boundaries, inject call sites, absence of production implementations, test-only features, drift checks) must be shown to fail on a deliberate violation once. The run must restore files byte-for-byte (hash-checked) and record the result under `docs/qa/evidence/<PHASE>/negative-controls/`.
+3. **Mocks prove logic, not enforcement.** A test using a mock controller, platform or clock is reported as "mock level". Real enforcement is verified only in the phase that adds the real adapter.
+4. **Synthetic secrets.** Logging tests use recognisable synthetic values (e.g. `Hunter2-SYNTHETIC`, distinctive coordinates and key codes) and assert they never appear in rendered output.
+5. **Alias IDs.** Prompt-specific IDs (e.g. T-CORE-xx) are mapped to canonical TEST-MATRIX IDs (§13 of the matrix) and counted once.
+6. **Time.** Engine tests never sleep. Every time-dependent decision takes `now: MonoTime`. Only the Windows smoke scripts wait, and they wait on observable conditions with time limits.

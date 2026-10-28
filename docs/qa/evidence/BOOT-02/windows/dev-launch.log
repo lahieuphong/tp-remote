@@ -1,0 +1,16 @@
+
+> tp-remote@0.1.0 dev
+> npm run tauri -w @tp-remote/desktop -- dev
+
+
+> @tp-remote/desktop@0.1.0 tauri
+> tauri dev
+
+
+> @tp-remote/desktop@0.1.0 dev
+> vite
+
+
+  VITE v8.3.5  ready in 237 ms
+
+  ➜  Local:   http://127.0.0.1:1420/

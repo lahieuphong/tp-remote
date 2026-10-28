@@ -1,0 +1,82 @@
+{
+    "label":  "dev-launch",
+    "started":  "2026-10-28T13:47:55",
+    "rootPid":  36624,
+    "ready":  true,
+    "secondsToReady":  12.5,
+    "appPid":  32504,
+    "appExe":  "E:\\Phong_Nho_IT\\tp-remote\\target\\debug\\tp-desktop.exe",
+    "viteListeners":  [
+                          "127.0.0.1:1420 pid=30048"
+                      ],
+    "processTree":  [
+                        "cmd.exe#36624\u003c-49388",
+                        "conhost.exe#28320\u003c-36624",
+                        "node.exe#7544\u003c-36624",
+                        "cmd.exe#34452\u003c-7544",
+                        "node.exe#44704\u003c-34452",
+                        "cmd.exe#50104\u003c-44704",
+                        "node.exe#46388\u003c-50104",
+                        "cmd.exe#45336\u003c-46388",
+                        "cargo.exe#21020\u003c-46388",
+                        "node.exe#46484\u003c-45336",
+                        "cargo.exe#40412\u003c-21020",
+                        "cmd.exe#24088\u003c-46484",
+                        "tp-desktop.exe#32504\u003c-40412",
+                        "node.exe#30048\u003c-24088",
+                        "msedgewebview2.exe#41264\u003c-32504",
+                        "msedgewebview2.exe#49628\u003c-41264",
+                        "msedgewebview2.exe#27452\u003c-41264",
+                        "msedgewebview2.exe#47320\u003c-41264",
+                        "msedgewebview2.exe#17924\u003c-41264",
+                        "msedgewebview2.exe#30588\u003c-41264"
+                    ],
+    "otherTreeListeners":  [
+
+                           ],
+    "screenshot":  "1116x799",
+    "treePids":  [
+                     36624,
+                     28320,
+                     7544,
+                     34452,
+                     44704,
+                     50104,
+                     46388,
+                     45336,
+                     41500,
+                     46484,
+                     33592,
+                     24088,
+                     30048,
+                     21020,
+                     47452,
+                     40412,
+                     10636,
+                     35672,
+                     42560,
+                     45036,
+                     32504,
+                     41264,
+                     49628,
+                     27452,
+                     47320,
+                     17924,
+                     30588
+                 ],
+    "closeMessageSent":  true,
+    "appExited":  true,
+    "rootExited":  true,
+    "survivorsAfterClose":  [
+
+                            ],
+    "port1420FreeAfter":  true,
+    "finished":  "2026-10-28T13:48:11",
+    "appEvents":  [
+                      "tp-remote level=info event=app.start version=0.1.0 profile=debug pid=32504",
+                      "tp-remote level=info event=app.ready",
+                      "tp-remote level=info event=ipc.get_app_info result=ok",
+                      "tp-remote level=info event=ipc.get_app_info result=ok",
+                      "tp-remote level=info event=app.exit"
+                  ]
+}

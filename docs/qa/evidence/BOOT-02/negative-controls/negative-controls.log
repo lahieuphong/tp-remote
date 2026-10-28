@@ -1,0 +1,31 @@
+== NC-1 machine accepts TransportReady in AwaitingConsent: cargo test -p tp-session exit=101
+  test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+  test every_reachable_configuration_satisfies_the_safety_invariants ... FAILED
+  thread 'every_reachable_configuration_satisfies_the_safety_invariants' (14776) panicked at crates\tp-session\tests\exploration.rs:126:29:
+  accepted against spec: TransportReady
+  test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+  error: test failed, to rerun pass `-p tp-session --test exploration`
+   restored machine.rs hash equal: True
+== NC-2/NC-3 inject outside gate + production PermissionManager impl: workspace_boundaries exit=101
+  test only_the_input_gate_calls_inject ... FAILED
+  test no_production_platform_implementation_exists_yet ... FAILED
+  E:/Phong_Nho_IT/tp-remote/crates/tp-test-harness/../../crates/tp-core/src/clock.rs:35 calls inject outside the input gate
+  E:/Phong_Nho_IT/tp-remote/crates/tp-test-harness/../../crates/tp-core/src/clock.rs:39: production implementation of PermissionManager
+  test result: FAILED. 7 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+   restored clock.rs hash equal: True
+== NC-4 test-support feature reaching the app build graph: workspace_boundaries exit=101
+  test the_app_build_graph_has_no_test_support ... FAILED
+  test-only feature in the app build: tp-core v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-core)|test-support
+  test result: FAILED. 8 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+   restored manifests equal: True True; Cargo.lock unchanged: True
+== after all restores: workspace_boundaries exit=0 test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+== after restore: cargo test -p tp-session exit=0; 29 passed
+== NC-1b same mutation, --no-fail-fast: exit=101
+  test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+  test every_reachable_configuration_satisfies_the_safety_invariants ... FAILED
+  test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+  test invalid_transitions_are_rejected_without_mutation ... FAILED
+  test result: FAILED. 14 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+  test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+  test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   restored machine.rs hash equal: True

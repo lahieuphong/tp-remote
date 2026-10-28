@@ -54,9 +54,10 @@
 
 ```mermaid
 flowchart LR
-  A0["ARCH-00<br/>architecture"] --> B1["BOOT-01<br/>scaffold + contracts + state machine"]
-  B1 --> C2["CAP-02<br/>capture + OS permissions"]
-  B1 --> N3["NET-03<br/>signaling · PAKE · consent · WebRTC"]
+  A0["ARCH-00<br/>architecture"] --> B1["BOOT-01<br/>Windows foundation + Tauri shell"]
+  B1 --> B2["BOOT-02<br/>contracts · state machine · policy · redaction"]
+  B2 --> C2["CAP-02<br/>capture + OS permissions"]
+  B2 --> N3["NET-03<br/>signaling · PAKE · consent · WebRTC"]
   C2 --> V4["VID-04<br/>encode · stream · render"]
   N3 --> V4
   N3 --> K5["CTRL-05<br/>input · validation · mapping"]
@@ -68,7 +69,11 @@ flowchart LR
   W7 -.-> R9
 ```
 
-CAP-02 and NET-03 may run in either order after BOOT-01. They do not share owned files.
+CAP-02 and NET-03 may run in either order after BOOT-02. They do not share owned files.
+
+> **Amendment (BOOT-02, 2026-10-28):**
+> - BOOT-02 was inserted after BOOT-01. It holds the BOOT-01 scope that the BOOT-01 prompt deferred: the contracts, the state machine, the policy and redaction.
+> - ADR numbers: ADR-003 is the session lifecycle and ADR-004 the platform support policy (U-08). The NET-03 session-security ADR is renumbered **ADR-005**, and the WAN-07 ADR **ADR-006**.
 
 ### 1.3 Hardware and access prerequisites (cross-phase)
 
@@ -121,6 +126,16 @@ CAP-02 and NET-03 may run in either order after BOOT-01. They do not share owned
 
 ---
 
+## 3a. BOOT-02 — Core contracts, session state machine, security gates (inserted; executed 2026-10-28)
+
+| Item | Content |
+|---|---|
+| Goal | A small, auditable, tested core that future remote features cannot bypass by accident |
+| Scope | ARCH-00 §4 contracts in `tp-contracts` (interfaces only); `tp-session` machine, registry and timers (ADR-003); `tp-security` authentication and consent proof types, grants, default-deny policy; `tp-core` `SessionService` and `InputGate`; `tp-diagnostics` allowlisted logging and redaction; cross-platform error model; protocol error mapping; ADR-004 (U-08, provisional) |
+| Non-goals | Any capture, input injection, codec, transport, signaling, PAKE, IPC command, OS permission request, network listener or UI change |
+| Files / modules owned | `crates/tp-contracts/**`, `crates/tp-session/**`, `crates/tp-security/**`, `crates/tp-core/**`, `crates/tp-diagnostics/**`, `crates/tp-protocol/src/error.rs`, `crates/tp-protocol/tests/reserved.rs`, `crates/tp-test-harness/tests/workspace_boundaries.rs`, `apps/desktop/src-tauri/src/lib.rs` (log field name only), `apps/desktop/src-tauri/tests/ipc.rs` (phase assertion only), BOOT-02 docs and ADR-003/004 |
+| Exit gate | BOOT-02 prompt §15. Result: see `docs/reports/BOOT-02-report.md` |
+
 ## 4. CAP-02 — Screen capture and OS permissions
 
 | Item | Content |
@@ -146,12 +161,12 @@ CAP-02 and NET-03 may run in either order after BOOT-01. They do not share owned
 | Goal | An authenticated, consent-gated session over LAN between two TP Remote instances, with WebRTC transport and the `tp-control` DataChannel, using mock media and input |
 | Scope | U-01 bake-off (str0m vs webrtc-rs vs libwebrtc) with report `docs/reports/NET-03-webrtc-bakeoff.md`. `tp-transport` (adapter for the chosen library; SimNet; loopback). `tp-signaling` (LAN listener and connector, framing, limits, per-IP rate limits). `tp-security` (DeviceIdentity + keystore (U-16), PAKE + key schedule (U-03), consent broker, AuthorizationPolicy). `tp-protocol` (signaling and control messages). `tp-session` integration. Resume within grace. Minimal ConsentDialog and SessionIndicator UI (security-required; U-06 decided). `evil-client` and `mitm-proxy` harness tools. Fuzz targets (if nightly approved). FS-D and the LAN part of FS-I |
 | Non-goals | Real video encoding (pre-encoded synthetic H.264 only, for the bake-off), real input injection (MockInput only), WAN, UI polish |
-| Files / modules owned | `crates/tp-transport/**`, `crates/tp-signaling/**`, `crates/tp-security/**` (except `os_permissions`, which CAP-02 owns), `crates/tp-protocol/**`, `crates/tp-session/**` (integration), `crates/tp-core/src/session/**`, `crates/tp-test-harness/src/{evil_client,mitm_proxy,headless}/**`, `fuzz/**`, `apps/desktop/src/components/{ConsentDialog,SessionIndicator}*`, `apps/desktop/src/app/{Host,Connect}*`, `docs/architecture/ADR-003-session-security.md` (new), `docs/security/THREAT-MODEL.md` (update) |
+| Files / modules owned | `crates/tp-transport/**`, `crates/tp-signaling/**`, `crates/tp-security/**` (except `os_permissions`, which CAP-02 owns), `crates/tp-protocol/**`, `crates/tp-session/**` (integration), `crates/tp-core/src/session/**`, `crates/tp-test-harness/src/{evil_client,mitm_proxy,headless}/**`, `fuzz/**`, `apps/desktop/src/components/{ConsentDialog,SessionIndicator}*`, `apps/desktop/src/app/{Host,Connect}*`, `docs/architecture/ADR-005-session-security.md` (new), `docs/security/THREAT-MODEL.md` (update) |
 | Dependencies | BOOT-01; **DEV-W2** for the two-device tests; nightly + `cargo-fuzz` (approval) for T-SEC-09; a security review of U-03 |
-| Implementation steps | 1. Bake-off spike (FS-D1 … D6) → choose U-01 → update ADR-002. 2. Choose the PAKE crate (U-03); write ADR-003 (key schedule, framing); review. 3. Signaling listener and connector with limits. 4. Handshake → `SessionRequest` / `HostIdentity` → consent broker → `ConsentResult`. 5. SDP over the authenticated channel; DTLS fingerprint double check. 6. `tp-control` channel, heartbeats, link degradation, resume. 7. Consent UI and indicator (UI-03 safety rules). 8. Harness attack tools; fuzz targets. 9. Run the gates |
+| Implementation steps | 1. Bake-off spike (FS-D1 … D6) → choose U-01 → update ADR-002. 2. Choose the PAKE crate (U-03); write ADR-005 (key schedule, framing); review. 3. Signaling listener and connector with limits. 4. Handshake → `SessionRequest` / `HostIdentity` → consent broker → `ConsentResult`. 5. SDP over the authenticated channel; DTLS fingerprint double check. 6. `tp-control` channel, heartbeats, link degradation, resume. 7. Consent UI and indicator (UI-03 safety rules). 8. Harness attack tools; fuzz targets. 9. Run the gates |
 | Test commands | `cargo test --workspace`; `cargo test -p tp-test-harness --test …` (T-INT-07, 09, 11, 12); `tp-headless host` + `tp-headless controller` (T-INT-06); `cargo +nightly fuzz run …` (T-SEC-09); `npm run e2e -- controller.spec.ts consent.spec.ts` |
 | Manual validation | W1 ↔ W2 session with mock media: consent Allow / Deny / timeout, revoke, Busy, adapter-disable reconnect; firewall behaviour (T-NWK-08); listener checks (T-SEC-17) |
-| Acceptance criteria | Every NET-03 gate test in TEST-MATRIX §10 passes; the bake-off decision is recorded; the threat model is updated; ADR-003 is approved |
+| Acceptance criteria | Every NET-03 gate test in TEST-MATRIX §10 passes; the bake-off decision is recorded; the threat model is updated; ADR-005 is approved |
 | Exit gate | PASS, or PARTIAL only for device-blocked items (W2) with explicit carry-forward; **no** waiver of T-SEC-03, 08, 12, 13 or 14 |
 | Risks / blockers | R-03 (W2), R-04 (library maturity), R-14 (virtual adapters), PAKE crate audit status, U-06 |
 
@@ -218,9 +233,9 @@ CAP-02 and NET-03 may run in either order after BOOT-01. They do not share owned
 | Goal | Sessions between devices on different networks, with the same authentication and consent guarantees |
 | Scope | Rendezvous signaling service (opaque relay of authenticated signaling) and client in `tp-signaling/wan`; STUN/TURN configuration; ephemeral TURN credentials; ICE restart across networks; deployment manifests for a **dev/test** environment only; server threat review |
 | Non-goals | Accounts, billing, production deployment, unattended access, address books |
-| Files / modules owned | `crates/tp-signaling/src/wan/**`, `services/rendezvous/**` (new), `infra/dev/**` (new), `docs/architecture/ADR-004-wan.md` (new), `docs/security/THREAT-MODEL.md` (update) |
+| Files / modules owned | `crates/tp-signaling/src/wan/**`, `services/rendezvous/**` (new), `infra/dev/**` (new), `docs/architecture/ADR-006-wan.md` (new), `docs/security/THREAT-MODEL.md` (update) |
 | Dependencies | XPLAT-06; **user approval for infrastructure (U-14)**, because cloud deployment is excluded from the POC; test networks |
-| Implementation steps | 1. ADR-004 (hosting, trust, privacy). 2. Rendezvous service. 3. TURN (e.g. coturn) in the dev environment. 4. Client integration. 5. Server MITM test (T-SEC-12 variant). 6. Network tests |
+| Implementation steps | 1. ADR-006 (hosting, trust, privacy). 2. Rendezvous service. 3. TURN (e.g. coturn) in the dev environment. 4. Client integration. 5. Server MITM test (T-SEC-12 variant). 6. Network tests |
 | Test commands | `cargo test -p tp-signaling`; service tests; T-NWK-09 … 11 manual |
 | Manual validation | Sessions across two independent networks, including a forced relay |
 | Acceptance criteria | T-NWK-09 … 11 and T-SEC-12 (server) PASS; metadata/privacy statement written |

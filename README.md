@@ -2,7 +2,7 @@
 
 Internal development workspace for **TP Remote**, a planned consent-first, cross-platform remote desktop application (macOS ↔ Windows). The architecture baseline is in [docs/architecture/ARCH-00.md](docs/architecture/ARCH-00.md).
 
-> **Status: BOOT-01 (Windows desktop foundation).** The app runs and reports real diagnostics from its Rust core. **No remote-desktop feature exists yet:** no screen capture, remote input, signaling, networking or streaming. macOS has not been built or tested.
+> **Status: BOOT-02 (core contracts, session state machine, security gates).** The app runs on Windows and reports real diagnostics from its Rust core. The engine now has its shared contracts, a deterministic session lifecycle, a default-deny authorization policy and allowlisted logging, all tested at engine level. **No remote-desktop feature exists yet:** no screen capture, remote input, signaling, networking or streaming, and the app advertises no capability. macOS has not been built or tested.
 
 Private internal development, all rights reserved; see [LICENSE.txt](LICENSE.txt).
 
@@ -17,12 +17,15 @@ tp-remote/
 │   │   ├── app/, components/, contract/, test/
 │   └── src-tauri/           Rust shell crate `tp-desktop` (commands, capabilities, config)
 ├── crates/                  Rust engine, 12 crates (boundaries: ARCH-00 §3.3)
-│   ├── tp-contracts         IPC DTOs + module descriptors (ts-rs behind feature `ts-bindings`)
+│   ├── tp-contracts         IPC DTOs (ts-rs), ids, errors, secrets, capabilities, and the
+│   │                        ARCH-00 §4 traits (interfaces only, no implementations)
 │   ├── tp-protocol          versioned JSON wire format v1, limits, strict validation
-│   ├── tp-core              app-core: wires the engine, answers get_app_info
-│   ├── tp-diagnostics       stderr event lines
-│   ├── tp-session, tp-security, tp-capture, tp-input,
-│   │   tp-media, tp-transport, tp-signaling      foundations only (no runtime capability)
+│   ├── tp-session           8-state session machine, timers, registry (ADR-003)
+│   ├── tp-security          auth/consent proof types, consent grants, default-deny policy
+│   ├── tp-core              app-core: SessionService, InputGate, get_app_info
+│   ├── tp-diagnostics       allowlisted structured logging + secret redaction
+│   ├── tp-capture, tp-input, tp-media,
+│   │   tp-transport, tp-signaling                foundations only (no runtime capability)
 │   └── tp-test-harness      test-only: bindings generator + workspace boundary tests
 ├── tests/fixtures/          JSON fixtures shared by Rust and TypeScript tests
 ├── scripts/                 check runner, license report, Windows smoke tests
@@ -117,7 +120,7 @@ Installers, code signing and auto-update are intentionally disabled (`bundle.act
 
 1. Install the prerequisites above.
 2. `npm ci`
-3. `npm run check`: expect 9/9 PASS (51 Rust tests, 18 Vitest tests).
+3. `npm run check`: expect 9/9 PASS (141 Rust tests, 18 Vitest tests as of BOOT-02).
 4. `npm run build:app` → `target\release\tp-desktop.exe`.
 5. `powershell -NoProfile -File scripts\smoke-windows.ps1 -Exe target\release\tp-desktop.exe -Label repro -Resize`. In `docs\qa\evidence\BOOT-01\windows\repro.summary.json`, expect:
    - `ipcObserved: true`, `cleanExit: true`;
@@ -126,17 +129,20 @@ Installers, code signing and auto-update are intentionally disabled (`bundle.act
 
 The BOOT-01 build's SHA-256 is recorded in the evidence. Byte-for-byte reproducibility of the executable has **not** been verified.
 
-## Known limitations (BOOT-01)
+## Known limitations (BOOT-02)
 
-- No remote-desktop functionality of any kind. The UI says so explicitly.
-- Verified on Windows 11 x64 at 100% display scaling only. Other scaling factors and macOS are untested.
-- The only IPC command is `get_app_info`. The session state machine, consent, PAKE, capture, input, codecs and transport are planned for later phases ([docs/roadmap/PROMPT-PLAN.md](docs/roadmap/PROMPT-PLAN.md)).
+- No remote-desktop functionality of any kind. The UI says so explicitly, and `platform_capabilities()` advertises nothing.
+- Verified on Windows 11 x64 at 100% display scaling only. Other scaling factors and macOS are untested. The OS support policy (U-08) is provisional ([ADR-004](docs/architecture/ADR-004-platform-support.md)).
+- The only IPC command is `get_app_info`. The session lifecycle and authorization policy exist in the engine but are not exposed over IPC.
+- There is no production source of authentication (PAKE) or local consent yet, by design ([BOOT-02 security review](docs/security/BOOT-02-security-review.md) §3).
+- Policy and gate tests run against mocks: they prove the logic, not OS-level enforcement.
+- Capture, input, codecs and transport are planned for later phases ([docs/roadmap/PROMPT-PLAN.md](docs/roadmap/PROMPT-PLAN.md)).
 - License review items remain open: option-ext (MPL-2.0) is linked through Tauri, and the legal owner is unconfirmed. See [docs/architecture/BOOT-01-dependency-map.md](docs/architecture/BOOT-01-dependency-map.md).
 - `cargo audit` and `cargo deny` are not installed. npm audit reported 0 vulnerabilities.
 
 ## Documentation
 
-- Architecture: [ARCH-00](docs/architecture/ARCH-00.md), [ADR-001](docs/architecture/ADR-001-stack.md), [ADR-002](docs/architecture/ADR-002-media-transport.md), [BOOT-01 dependency map](docs/architecture/BOOT-01-dependency-map.md)
-- Security: [threat model](docs/security/THREAT-MODEL.md)
-- QA: [strategy](docs/qa/TEST-STRATEGY.md), [matrix](docs/qa/TEST-MATRIX.md), [BOOT-01 results](docs/qa/BOOT-01-test-results.md), [BOOT-01 environment](docs/qa/BOOT-01-environment.md)
-- Reports: [ARCH-00](docs/reports/ARCH-00-report.md), [BOOT-01](docs/reports/BOOT-01-report.md)
+- Architecture: [ARCH-00](docs/architecture/ARCH-00.md), [ADR-001](docs/architecture/ADR-001-stack.md), [ADR-002](docs/architecture/ADR-002-media-transport.md), [ADR-003 session lifecycle](docs/architecture/ADR-003-session-lifecycle.md), [ADR-004 platform support](docs/architecture/ADR-004-platform-support.md), [BOOT-01 dependency map](docs/architecture/BOOT-01-dependency-map.md), [BOOT-02 contract map](docs/architecture/BOOT-02-contract-map.md)
+- Security: [threat model](docs/security/THREAT-MODEL.md), [BOOT-02 security review](docs/security/BOOT-02-security-review.md)
+- QA: [strategy](docs/qa/TEST-STRATEGY.md), [matrix](docs/qa/TEST-MATRIX.md), [BOOT-01 results](docs/qa/BOOT-01-test-results.md), [BOOT-01 environment](docs/qa/BOOT-01-environment.md), [BOOT-02 results](docs/qa/BOOT-02-test-results.md)
+- Reports: [ARCH-00](docs/reports/ARCH-00-report.md), [BOOT-01](docs/reports/BOOT-01-report.md), [BOOT-02](docs/reports/BOOT-02-report.md)

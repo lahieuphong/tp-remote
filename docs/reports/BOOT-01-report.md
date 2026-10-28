@@ -296,3 +296,9 @@ Caveats that do **not** fail the gate but must not be overlooked:
 **[Recommendation]** Review BOOT-01, then run a short **BOOT-02** before CAP-02. BOOT-02 would contain the deferred items in §14: the session state machine with property tests, the redaction layer, the ARCH-00 §4 contract traits with fakes, and an optional cargo-deny gate. All of it is pure logic, testable on this Windows host, and needs no OS permissions. In parallel, decide U-08 and arrange macOS hardware for CAP-02.
 
 **STOP.** CAP-02 and BOOT-02 have not been started.
+
+---
+
+## Erratum (added in BOOT-02, 2026-10-28)
+
+§14 ("No git repository") and §16–17 (the recommendation to approve `git init`) rest on an unverified statement. The workspace has been a git repository since commit `3166183` (2026-10-28 11:16:57 +07:00), before BOOT-01 began. BOOT-01 was later committed as `7a9ae99` and pushed to `origin/main`, outside the assistant's actions. See BOOT-01-environment §7. No BOOT-01 test result is affected.

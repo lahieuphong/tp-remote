@@ -30,7 +30,7 @@ pub fn app_info_response(shell: ShellContext, inject_fault: bool) -> Result<AppI
         emit(
             Level::Warn,
             "ipc.get_app_info",
-            &[("result", "err"), ("code", "injectedFault")],
+            &[("result", "err"), ("error_code", "injectedFault")],
         );
         return Err(IpcError {
             code: IpcErrorCode::InjectedFault,

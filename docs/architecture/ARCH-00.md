@@ -137,6 +137,11 @@ The following are excluded:
 >
 > The IPC command listed as `app_info` in §3.5 is implemented as `get_app_info`. The recommendations above for U-05 and U-13 are kept for history only.
 
+> **Status update (BOOT-02, 2026-10-28):**
+> - **U-08** is recorded as **PROVISIONAL** in [ADR-004](ADR-004-platform-support.md): Windows 11 24H2+ and macOS 15+ primary; Windows 10 22H2 and macOS 13–14 legacy candidates.
+> - The session lifecycle (§6) is implemented in `tp-session`, with the clarifications in [ADR-003](ADR-003-session-lifecycle.md). These include the `Busy` contradiction between row 4 and the outcome classes, stale-event rules, and timer outcomes.
+> - The §4 contracts exist in `tp-contracts`, as interfaces without production implementations ([BOOT-02-contract-map](BOOT-02-contract-map.md)). The `SessionManager` contract is synchronous (ADR-003 C-10).
+
 ---
 
 ## 3. System architecture

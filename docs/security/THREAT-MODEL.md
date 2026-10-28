@@ -269,3 +269,20 @@ Likelihood (L) and Impact (I) use H/M/L and are rated *after* the mitigations ar
 | SQ-3 | Native vs WebView consent dialog (U-06) | NET-03 / UX-08 |
 | SQ-4 | Crash-dump policy (Windows Error Reporting, macOS crash reports) and whether key buffers can be excluded | REL-09 |
 | SQ-5 | Known-device pinning and trust-on-first-use for the post-MVP (still attended) | Post-XPLAT-06 |
+
+## 11. Status update (BOOT-02, 2026-10-28)
+
+Engine-level controls now exist and are tested on Windows. Details, the trusted-consent boundary requirements and the mandatory logging rules are in [BOOT-02-security-review](BOOT-02-security-review.md).
+
+| Item | Status |
+|---|---|
+| SR-01 local approval | Engine: consent enters only as `tp_security::LocalConsent`, which has no production constructor. The trusted consent surface is **FUTURE** (U-06) |
+| SR-02 no input before approval | Engine and mock: TESTED (state machine, policy, `InputGate`) |
+| SR-03 no streaming before authorization | Engine: TESTED (`StartCapture` effect only after consent; `ViewScreen` policy). No capture exists |
+| SR-05 / SR-06 revoke, expiry, ordered teardown | Engine: TESTED (gate closed first, TTL, watchdog). Real teardown: FUTURE |
+| SR-10 no secrets in logs | Engine: TESTED (allowlist, `Secret`, scrubber with synthetic secrets). Scrubber limits documented |
+| SR-13 / SR-14 | Policy logic TESTED. Peer authentication (PAKE) and per-message authorization on a real channel: FUTURE (NET-03) |
+| TM-05, TM-07, TM-08, TM-10, TM-12 (origin guard), TM-13, TM-24 | Engine controls TESTED |
+| TM-25 stuck input | Teardown effect order TESTED; real release: FUTURE (CTRL-05) |
+
+No threat is downgraded on the strength of mock-level tests alone. Residual risks F-2 … F-7 remain open as listed in the BOOT-02 review.

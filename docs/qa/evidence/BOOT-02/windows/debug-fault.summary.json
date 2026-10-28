@@ -1,0 +1,60 @@
+{
+    "label":  "debug-fault",
+    "started":  "2026-10-28T13:47:50",
+    "exe":  "E:\\Phong_Nho_IT\\tp-remote\\target\\debug\\tp-desktop.exe",
+    "exeSha256":  "244DE7E185BCAEFADE76567A10018209EE179935FE0C83003C94E6180ADADE8A",
+    "injectFault":  true,
+    "pid":  8596,
+    "exitedDuringStartup":  false,
+    "ipcObserved":  true,
+    "secondsToIpc":  0.43,
+    "windowVisible":  true,
+    "windowTitle":  "TP Remote",
+    "token":  "elevated=False integrity=Medium (0x2000)",
+    "dpiAwareness":  "per-monitor (PerMonitorV2), window DPI 96",
+    "initialRect":  "402,120,1116,799",
+    "screenshotInitial":  "1116x799",
+    "processTree":  [
+                        "tp-desktop.exe#8596\u003c-41880",
+                        "conhost.exe#46492\u003c-8596",
+                        "msedgewebview2.exe#38464\u003c-8596",
+                        "msedgewebview2.exe#43992\u003c-38464",
+                        "msedgewebview2.exe#3584\u003c-38464",
+                        "msedgewebview2.exe#47368\u003c-38464",
+                        "msedgewebview2.exe#41764\u003c-38464",
+                        "msedgewebview2.exe#33308\u003c-38464"
+                    ],
+    "tcpListeners":  [
+
+                     ],
+    "udpEndpoints":  [
+
+                     ],
+    "treePidsBeforeClose":  [
+                                8596,
+                                46492,
+                                38464,
+                                43992,
+                                3584,
+                                47368,
+                                41764,
+                                33308
+                            ],
+    "closeMessageSent":  true,
+    "exitedAfterClose":  true,
+    "exitCode":  0,
+    "survivingPids":  [
+
+                      ],
+    "cleanExit":  true,
+    "stderrEvents":  [
+                         "tp-remote level=info event=app.start version=0.1.0 profile=debug pid=8596",
+                         "tp-remote level=info event=app.ready",
+                         "tp-remote level=warn event=ipc.get_app_info result=err error_code=injectedFault",
+                         "tp-remote level=info event=app.exit"
+                     ],
+    "stderrOther":  [
+
+                    ],
+    "finished":  "2026-10-28T13:47:52"
+}

@@ -1,15 +1,24 @@
 //! App-core: the only crate that depends on every engine crate (ARCH-00 §3.3).
 //!
-//! In BOOT-01 it answers one question for the shell — what this build is and which
-//! engine modules exist — through [`app_info`]. No sessions, pipelines or input gate
-//! exist yet.
+//! IMPLEMENTED (BOOT-02): build information for the shell ([`app_info`]), the honest
+//! capability advertisement ([`platform_capabilities`]), the [`service::SessionService`]
+//! that combines the session registry with the security policy behind the
+//! `SessionManager` contract, the [`gate::InputGate`], and a monotonic clock.
+//!
+//! NOT IMPLEMENTED: nothing here performs capture, input injection, networking or
+//! prompts, and the desktop shell exposes none of it over IPC.
 #![forbid(unsafe_code)]
 
+pub mod clock;
+pub mod gate;
+pub mod service;
+
+use tp_contracts::capability::PlatformCapabilities;
 use tp_contracts::ipc::{AppInfo, BuildProfile, EngineModuleStatus, PlatformInfo, RemoteFeatures};
 use tp_contracts::module::{ModuleDescriptor, ModuleState};
 
 /// Roadmap phase this build belongs to.
-pub const PHASE: &str = "BOOT-01";
+pub const PHASE: &str = "BOOT-02";
 
 /// Facts only the desktop shell knows.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -36,6 +45,12 @@ pub fn engine_modules() -> Vec<ModuleDescriptor> {
         tp_diagnostics::MODULE,
         MODULE,
     ]
+}
+
+/// What this build can provide to a peer. Nothing, until real capture and input
+/// implementations exist (CAP-02, CTRL-05).
+pub const fn platform_capabilities() -> PlatformCapabilities {
+    PlatformCapabilities::NONE
 }
 
 pub fn platform_info() -> PlatformInfo {
@@ -75,12 +90,11 @@ pub fn app_info(shell: ShellContext) -> AppInfo {
     }
 }
 
-/// Crates whose implementation would give the build a remote-desktop capability.
-/// `RemoteFeatures` must change deliberately once any of them stops being Foundation.
+/// Crates whose implementation would give the build a remote-desktop capability
+/// (capture, input, codec, transport, signaling). `RemoteFeatures` and
+/// `platform_capabilities` must change deliberately once any of them is implemented.
 #[cfg(test)]
-const REMOTE_CAPABILITY_CRATES: &[&str] = &[
-    "tp-session",
-    "tp-security",
+const CAPABILITY_CRATES: &[&str] = &[
     "tp-capture",
     "tp-input",
     "tp-media",
@@ -100,6 +114,7 @@ pub const MODULE: ModuleDescriptor = ModuleDescriptor {
 mod tests {
     use super::*;
     use std::collections::BTreeSet;
+    use tp_contracts::capability::{Availability, Capability};
 
     fn shell() -> ShellContext {
         ShellContext {
@@ -133,10 +148,12 @@ mod tests {
         assert_eq!(unique, expected);
     }
 
+    // T-CONTRACT-05: nothing that would provide a remote capability claims progress, and
+    // nothing is advertised.
     #[test]
-    fn no_remote_capability_crate_claims_an_implementation_in_boot01() {
+    fn no_capability_crate_claims_an_implementation() {
         for m in engine_modules() {
-            if REMOTE_CAPABILITY_CRATES.contains(&m.crate_name) {
+            if CAPABILITY_CRATES.contains(&m.crate_name) {
                 assert_eq!(
                     m.state,
                     ModuleState::Foundation,
@@ -145,12 +162,21 @@ mod tests {
                 );
             }
         }
+        let platform = platform_capabilities();
+        assert_eq!(platform, PlatformCapabilities::NONE);
+        assert!(platform.advertised().is_empty());
+        for capability in Capability::ALL {
+            assert_eq!(
+                platform.availability(capability),
+                Availability::NotImplemented
+            );
+        }
     }
 
     #[test]
     fn app_info_reports_this_build_honestly() {
         let info = app_info(shell());
-        assert_eq!(info.phase, "BOOT-01");
+        assert_eq!(info.phase, "BOOT-02");
         assert_eq!(info.remote_features, RemoteFeatures::NotImplemented);
         assert_eq!(info.protocol, tp_protocol::support());
         assert_eq!(info.platform.os, std::env::consts::OS);
@@ -169,5 +195,14 @@ mod tests {
             BuildProfile::Release
         };
         assert_eq!(build_profile(), expected);
+    }
+
+    #[test]
+    fn the_monotonic_clock_never_goes_backwards() {
+        use tp_contracts::time::Clock;
+        let clock = clock::MonotonicClock::new();
+        let a = clock.now();
+        let b = clock.now();
+        assert!(b >= a);
     }
 }

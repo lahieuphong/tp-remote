@@ -1,0 +1,183 @@
+     Running unittests src\lib.rs (target\debug\deps\tp_capture-3754b8071d265f56.exe)
+     Running unittests src\lib.rs (target\debug\deps\tp_contracts-95964726443d031f.exe)
+     Running tests\contracts_implementable.rs (target\debug\deps\contracts_implementable-b4549dd102be0df6.exe)
+test every_contract_is_implementable_and_reports_honestly ... ok
+     Running tests\ipc_fixtures.rs (target\debug\deps\ipc_fixtures-316493f8bfee9cc6.exe)
+test ipc_error_uses_camel_case_codes ... ok
+test a_missing_webview_version_serializes_as_null ... ok
+test serialization_round_trips ... ok
+test the_valid_fixture_deserializes_to_the_canonical_value ... ok
+test rust_serialization_equals_the_valid_fixture ... ok
+test invalid_fixtures_are_rejected_by_rust ... ok
+     Running tests\primitives.rs (target\debug\deps\primitives-e0bd29ff1b049b0e.exe)
+test cancellation_propagates_to_children_only ... ok
+test generations_increase ... ok
+test capabilities_and_scopes ... ok
+test identifier_debug_output_shows_only_the_tag ... ok
+test debug_output_never_contains_payloads ... ok
+test monotonic_time_saturates ... ok
+test identifiers_accept_only_32_lowercase_hex_characters ... ok
+test secrets_debug_redacted_and_wiped ... ok
+test public_errors_hide_internal_context ... ok
+test every_error_category_is_classified_and_named ... ok
+test identifiers_serialize_as_hex_and_reject_invalid_json ... ok
+     Running unittests src\lib.rs (target\debug\deps\tp_core-6df8a2238d162074.exe)
+test tests::build_profile_matches_debug_assertions ... ok
+test tests::no_capability_crate_claims_an_implementation ... ok
+test tests::app_info_reports_this_build_honestly ... ok
+test tests::the_monotonic_clock_never_goes_backwards ... ok
+test tests::engine_modules_cover_every_engine_crate_exactly_once ... ok
+     Running tests\gate_and_logging.rs (target\debug\deps\gate_and_logging-19b9d5690ebdb4b8.exe)
+test debug_output_of_input_events_is_redacted ... ok
+test denied_input_is_logged_without_payload ... ok
+test view_only_consent_never_allows_input ... ok
+test input_before_consent_is_never_injected ... ok
+test the_production_platform_lets_no_input_through ... ok
+test lifecycle_logging_is_complete_and_payload_free ... ok
+test input_is_injected_only_while_fully_authorized ... ok
+     Running tests\service.rs (target\debug\deps\service-c5f33aa49ec54e34.exe)
+test a_second_session_cannot_start_while_one_is_active ... ok
+test a_local_denial_grants_nothing ... ok
+test remote_consent_on_the_host_is_rejected_and_ends_the_session ... ok
+test nothing_is_authorized_before_local_consent ... ok
+test a_controller_never_decides_consent_and_is_never_authorized ... ok
+test authorization_ends_at_the_session_ttl ... ok
+test preparation_requires_an_authenticated_peer ... ok
+test a_fully_consented_session_is_authorized_only_where_the_platform_provides ... ok
+test revocation_takes_effect_before_the_next_authorization ... ok
+test consent_proofs_are_bound_to_their_session ... ok
+test stale_sessions_regain_nothing ... ok
+     Running unittests src\lib.rs (target\debug\deps\tp_desktop_lib-1c58f66adb222334.exe)
+     Running unittests src\main.rs (target\debug\deps\tp_desktop-b47121496ac68392.exe)
+     Running tests\config.rs (target\debug\deps\config-12b45e967cefc579.exe)
+test no_tauri_plugins_are_linked ... ok
+test the_vite_dev_server_binds_to_loopback_only ... ok
+test the_only_capability_grants_only_get_app_info_to_the_main_window ... ok
+test tauri_config_is_locked_down ... ok
+     Running tests\ipc.rs (target\debug\deps\ipc-ad504bc1bbbc65fc.exe)
+test debug_builds_can_inject_an_ipc_fault ... ok
+test without_fault_injection_the_response_is_ok ... ok
+test windows_other_than_main_cannot_call_get_app_info ... ok
+test remote_origins_cannot_call_get_app_info ... ok
+test plugins_that_are_not_installed_are_rejected ... ok
+test core_commands_are_denied_because_no_core_permission_is_granted ... ok
+test startup_creates_only_the_main_window_and_teardown_is_clean ... ok
+test get_app_info_returns_the_typed_contract ... ok
+     Running unittests src\lib.rs (target\debug\deps\tp_diagnostics-0a33cfced3044f96.exe)
+test tests::event_names_and_keys_are_restricted_to_identifier_characters ... ok
+test tests::formats_plain_allowed_fields ... ok
+test tests::empty_and_quoted_values_are_escaped ... ok
+test tests::memory_sink_collects_rendered_lines ... ok
+test tests::unlisted_field_names_are_redacted ... ok
+test tests::values_cannot_inject_lines_or_fields ... ok
+test tests::ordinary_context_survives_scrubbing ... ok
+test tests::sessions_are_logged_by_tag_never_by_full_identifier ... ok
+test tests::secrets_inside_allowed_free_text_are_scrubbed ... ok
+test tests::long_text_is_capped ... ok
+     Running unittests src\lib.rs (target\debug\deps\tp_input-0db70e33373e0ae1.exe)
+     Running unittests src\lib.rs (target\debug\deps\tp_media-2b8f7aa21906405f.exe)
+     Running unittests src\lib.rs (target\debug\deps\tp_protocol-081b6f3b11129caf.exe)
+     Running tests\codec.rs (target\debug\deps\codec-26ed486e8da9b680.exe)
+test encoder_refuses_invalid_messages ... ok
+test a_message_at_the_limit_is_not_rejected_for_size ... ok
+test errors_do_not_echo_long_or_control_characters_from_the_peer ... ok
+test encode_then_decode_round_trips ... ok
+test encoding_is_deterministic_across_calls ... ok
+test oversized_messages_are_rejected_before_parsing ... ok
+test writer_uses_the_current_protocol_version ... ok
+test version_support_is_exactly_v1 ... ok
+test deeply_nested_payloads_fail_without_crashing ... ok
+test unsupported_version_reports_the_supported_range ... ok
+test encoding_matches_the_canonical_fixture_byte_for_byte ... ok
+     Running tests\fixtures.rs (target\debug\deps\fixtures-a8bc3ab4b99d5e9d.exe)
+test every_fixture_file_is_listed_in_the_manifest ... ok
+test every_fixture_produces_its_expected_result ... ok
+     Running tests\reserved.rs (target\debug\deps\reserved-18a4c92f8f265df8.exe)
+test input_and_session_commands_are_among_the_reserved_types ... ok
+test protocol_errors_map_to_categories_without_peer_text ... ok
+test reserved_types_with_a_plausible_payload_are_still_rejected ... ok
+test reserved_types_are_rejected_on_every_channel ... ok
+     Running unittests src\lib.rs (target\debug\deps\tp_security-c96b2cd967528892.exe)
+test tests::a_grant_for_a_different_peer_is_rejected ... ok
+test tests::a_closed_session_cannot_regain_access ... ok
+test tests::a_wrong_session_identifier_is_rejected ... ok
+test tests::no_consent_means_no_control_permission ... ok
+test tests::only_a_connected_host_with_a_healthy_link_can_be_authorized ... ok
+test tests::deny_reasons_map_to_typed_error_categories ... ok
+test tests::expired_authorization_is_rejected ... ok
+test tests::an_authenticated_but_unapproved_peer_is_rejected ... ok
+test tests::an_empty_context_denies_everything ... ok
+test tests::positive_control_allows_only_with_every_condition_met ... ok
+test tests::revocation_immediately_invalidates_authorization ... ok
+test tests::there_is_no_implicit_privilege_escalation ... ok
+test tests::unsupported_capabilities_are_rejected ... ok
+     Running unittests src\lib.rs (target\debug\deps\tp_session-7503a69a2ae21c36.exe)
+     Running tests\exploration.rs (target\debug\deps\exploration-6971e99a02713321.exe)
+test every_reachable_configuration_satisfies_the_safety_invariants ... ok
+     Running tests\machine.rs (target\debug\deps\machine-4fa5ebf8b1c82e85.exe)
+test consent_cannot_exceed_the_requested_scope ... ok
+test an_ended_session_rejects_every_event_and_has_no_timers ... ok
+test consent_denied_ends_normally_after_cleanup ... ok
+test duplicate_stops_during_teardown_change_nothing ... ok
+test disconnect_during_connecting_cannot_be_undone_by_a_late_transport ... ok
+test consent_from_the_wrong_origin_is_rejected ... ok
+test initialization_is_idle_and_inert ... ok
+test link_degradation_closes_and_restoration_reopens_the_gate ... ok
+test normal_path_controller_and_view_only_host ... ok
+test normal_path_host_view_and_control ... ok
+test reconnect_grace_and_session_ttl ... ok
+test teardown_escalation_and_watchdog ... ok
+test timers_fire_exactly_at_their_deadlines ... ok
+test every_active_state_exits_through_disconnecting ... ok
+test invalid_transitions_are_rejected_without_mutation ... ok
+     Running tests\registry.rs (target\debug\deps\registry-fd12bfa73fd02ca2.exe)
+test scenario_b_local_denial ... ok
+test scenario_a_e_normal_session_and_shutdown ... ok
+test events_without_any_session_are_rejected ... ok
+test scenario_c_preparation_failure_and_timeout ... ok
+test only_one_active_session_at_a_time ... ok
+test scenario_k_previous_session_events_during_a_new_session ... ok
+test scenario_h_duplicate_disconnects ... ok
+test scenario_d_connection_timeout ... ok
+test scenario_g_peer_disconnects_unexpectedly ... ok
+test scenario_i_events_after_the_end_are_rejected ... ok
+test the_audit_trail_records_applied_and_rejected_events_without_payloads ... ok
+test scenario_f_revocation_while_connected ... ok
+test scenario_j_concurrent_connect_and_disconnect ... ok
+     Running unittests src\lib.rs (target\debug\deps\tp_signaling-1fc921dd82aec6c1.exe)
+     Running unittests src\lib.rs (target\debug\deps\tp_test_harness-8de529e29df6c272.exe)
+     Running unittests src\bin\tp-bindings.rs (target\debug\deps\tp_bindings-9080bb869fdd81df.exe)
+     Running tests\bindings.rs (target\debug\deps\bindings-4187d17a2e242ba1.exe)
+test every_type_file_carries_the_ts_rs_header ... ok
+test no_binding_uses_bigint ... ok
+test generation_is_deterministic ... ok
+test app_info_binding_matches_the_camel_case_json_shape ... ok
+test committed_bindings_have_not_drifted ... ok
+     Running tests\workspace_boundaries.rs (target\debug\deps\workspace_boundaries-9a1b3b5f57144f73.exe)
+test only_the_input_gate_calls_inject ... ok
+test no_production_platform_implementation_exists_yet ... ok
+test internal_dependency_graph_is_acyclic ... ok
+test only_the_shell_depends_on_tauri ... ok
+test platform_crates_have_no_async_runtime ... ok
+test internal_dependencies_follow_the_allowed_edges ... ok
+test designated_crates_forbid_unsafe_code ... ok
+test workspace_contains_exactly_the_architecture_crates_and_the_shell ... ok
+test the_app_build_graph_has_no_test_support ... ok
+     Running unittests src\lib.rs (target\debug\deps\tp_transport-03595bc0c663ec3e.exe)
+   Doc-tests tp_capture
+   Doc-tests tp_contracts
+test crates\tp-contracts\src\secret.rs - secret (line 9) ... ok
+test crates\tp-contracts\src\secret.rs - secret (line 18) - compile fail ... ok
+test crates\tp-contracts\src\secret.rs - secret (line 23) - compile fail ... ok
+test crates\tp-contracts\src\secret.rs - secret (line 28) - compile fail ... ok
+   Doc-tests tp_core
+   Doc-tests tp_desktop_lib
+   Doc-tests tp_diagnostics
+   Doc-tests tp_input
+   Doc-tests tp_media
+   Doc-tests tp_protocol
+   Doc-tests tp_security
+   Doc-tests tp_session
+   Doc-tests tp_signaling
+   Doc-tests tp_test_harness
+   Doc-tests tp_transport

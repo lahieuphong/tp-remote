@@ -60,7 +60,7 @@ fn get_app_info_returns_the_typed_contract() {
 
     assert_eq!(info.app_name, "TP Remote");
     assert_eq!(info.app_version, env!("CARGO_PKG_VERSION"));
-    assert_eq!(info.phase, "BOOT-01");
+    assert_eq!(info.phase, tp_core::PHASE);
     assert_eq!(info.remote_features, RemoteFeatures::NotImplemented);
     assert_eq!(info.protocol.current, 1);
     assert_eq!(info.platform.os, std::env::consts::OS);

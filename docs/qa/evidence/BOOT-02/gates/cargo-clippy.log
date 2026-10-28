@@ -1,0 +1,6 @@
+# command: cargo clippy --workspace --all-targets -- -D warnings
+# started: 2026-10-28T13:45:47  duration_s: 0.9  exit: 0
+    Checking tp-session v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-session)
+    Checking tp-core v0.1.0 (E:\Phong_Nho_IT\tp-remote\crates\tp-core)
+    Checking tp-desktop v0.1.0 (E:\Phong_Nho_IT\tp-remote\apps\desktop\src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.80s

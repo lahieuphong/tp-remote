@@ -210,3 +210,44 @@
 | Stability / cycles (T-PRF-07/08) | ✔ | ✔ | ✔ | ✔ |
 | Stuck keys (T-DEV-16) | ✔ | ✔ | ✔ | ✔ |
 | **Executable today** | No (no Mac) | No (no Mac) | No (no W2) | No (no Macs) |
+
+---
+
+## 12. BOOT-02 additions (new canonical IDs)
+
+Status: all PASS on DEV-W1 at engine level (see [BOOT-02-test-results](BOOT-02-test-results.md)).
+
+| ID | Test | Phase | Preconditions | Device / OS | Steps / command | Expected result | Evidence | P / F / B |
+|---|---|---|---|---|---|---|---|---|
+| T-UNI-23 | Session registry: identity, stale-event rejection, idempotent stop | BOOT-02 | tp-session | ANY | `cargo test -p tp-session --test registry` | New id and higher generation per session; events and stops for other references → `StaleSession` with no change; repeated stops → `AlreadyStopping` / `AlreadyEnded` | test log | P / F |
+| T-UNI-24 | Registry concurrency | BOOT-02 | `SharedRegistry` | ANY | `cargo test -p tp-session --test registry scenario_j` | Exactly one stop starts teardown per round; no `Connected` after an accepted stop | test log (rounds, race winners) | P / F |
+| T-UNI-25 | Error model: classification, public form, mapping | BOOT-02 | — | ANY | `cargo test -p tp-contracts --test primitives`; `-p tp-protocol --test reserved`; `-p tp-security` | 13 categories, 3 classes; `PublicError` has no internal context; protocol and deny mappings drop peer text | test logs | P / F |
+| T-UNI-26 | Secret wrapper and redacted `Debug` | BOOT-02 | — | ANY | `cargo test -p tp-contracts` (incl. doctests); `-p tp-core --test gate_and_logging` | `Secret` cannot be displayed, serialized or cloned (compile-fail); `Debug` of secrets, ids, input, frames and control bytes contains no payload | test logs | P / F |
+| T-UNI-27 | Contracts implementable; honest capability advertisement | BOOT-02 | — | ANY | `cargo test -p tp-contracts --test contracts_implementable`; `-p tp-core`; `-p tp-test-harness` | Every ARCH-00 §4 trait is implementable generically; `platform_capabilities()` = NONE; capability crates Foundation; no production implementation of platform traits | test logs | P / F |
+| T-UNI-28 | Input gate authorizes every event (mock controller) | BOOT-02 | `RecordingController` | ANY | `cargo test -p tp-core --test gate_and_logging` | 0 injections before consent, after revoke, with view-only scope, with link degraded, or with the production platform; injections only while fully authorized | test log | P / F (mock level only) |
+| T-UNI-29 | Reserved message types cannot decode | BOOT-02 | — | ANY | `cargo test -p tp-protocol --test reserved` | All reserved types → `NotAuthorized` on both channels; no `MessageKind` | test log | P / F |
+
+**Notes on existing IDs:**
+- T-UNI-04's property test is implemented without `proptest`, as exhaustive reachability exploration (`crates/tp-session/tests/exploration.rs`).
+- T-UNI-01 … 06, T-UNI-17 and T-UNI-18 moved from NOT RUN to PASS (engine level) in BOOT-02.
+- T-UNI-22, T-INT-01 and T-INT-13 remain NOT RUN (no media pipeline or diagnostics command).
+
+## 13. Prompt alias IDs (BOOT-02) → canonical IDs
+
+| Alias | Canonical | Alias | Canonical |
+|---|---|---|---|
+| T-CORE-01 | T-UNI-01 | T-SEC-CORE-01 | T-UNI-17, T-UNI-28 |
+| T-CORE-02 | T-UNI-01 | T-SEC-CORE-02 | T-UNI-17 |
+| T-CORE-03 | T-UNI-02, T-UNI-04, T-UNI-05 | T-SEC-CORE-03 | T-UNI-17 |
+| T-CORE-04 | T-UNI-03 | T-SEC-CORE-04 | T-UNI-17 |
+| T-CORE-05 | T-UNI-06 | T-SEC-CORE-05 | T-UNI-17 |
+| T-CORE-06 | T-UNI-23 | T-SEC-CORE-06 | T-UNI-17 |
+| T-CORE-07 | T-UNI-01 | T-SEC-CORE-07 | T-UNI-17, T-UNI-28 |
+| T-CORE-08 | T-UNI-23 | T-SEC-CORE-08 | T-UNI-17 |
+| T-CORE-09 | T-UNI-23 | T-LOG-01, T-LOG-03 | T-UNI-18 |
+| T-CORE-10 | T-UNI-24 | T-LOG-02 | T-UNI-26 |
+| T-CONTRACT-01, -05 | T-UNI-27 | T-LOG-04 | T-UNI-25 |
+| T-CONTRACT-02 | T-STA-08 | T-CONTRACT-03 | T-UNI-14, T-UNI-15, T-UNI-16 |
+| T-CONTRACT-04 | T-INT-10 | T-CONTRACT-06 | T-UNI-29 |
+
+**BOOT-02 gate list:** T-STA-01 … 04, 07, 08, 09, 10; T-UNI-01 … 06, 14 … 18, 23 … 29; T-INT-10; the BOOT-01 Windows runtime checks re-run.

@@ -19,5 +19,11 @@ tp-transport = { workspace = true }
 tp-signaling = { workspace = true }
 tp-diagnostics = { workspace = true }
 
+[dev-dependencies]
+# Test-only constructors (deterministic ids, proof types). Dev-dependency features are
+# not enabled for the desktop app's build graph.
+tp-session = { workspace = true, features = ["test-support"] }
+tp-security = { workspace = true, features = ["test-support"] }
+
 [lints]
 workspace = true
